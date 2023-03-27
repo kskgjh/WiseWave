@@ -1,0 +1,412 @@
+.main {
+    padding: 1em;
+    min-height: 100dvh;
+    max-width: 100vw;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    position: relative;
+    gap: 1rem;
+}
+.hideSideBar{
+    transform: translateX(100%);
+}
+#menuBtn {
+    cursor: pointer;
+
+}
+#sideBarMenu {
+    padding: 1em 2em;
+    background-color: var(--dark-red);
+    right: 0;
+    z-index: 1;
+    top: 3.5rem;
+    min-height: calc(100dvh - 3.5rem);
+    place-self: end;
+    display: flex;
+    gap: 1.5em;
+    position: fixed;
+    flex-flow: column nowrap;
+    align-items: center;
+    transition: transform 500ms ease-out;
+}
+#sideBarMenu h1 {
+    font-size: 4rem;
+}
+#sideBarMenu  {
+    list-style: none;
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 1em;
+}
+.selected {
+    background-color: var(--light-red);
+}
+#sideBarMenu:first-child {
+    margin-bottom: 2rem;
+}
+#sideBarMenu li {
+    display: block;
+    user-select: none;
+    padding: 0.3em 0.5em;
+    font-size: 2rem;
+    cursor: pointer;
+    transition-delay:   box-shadow 300ms, 
+                        background 100ms;
+    transition: background 200ms ease, 
+                box-shadow 300ms ease-out,
+                transform 200ms ease-out,
+                opacity 300ms ease;
+}
+#sideBarMenu li:not(.selected):hover {
+    background-color: var(--light-red);
+    box-shadow: 5px 6px gray;
+    transform: translate(-5px, -6px);
+}
+#sideBarMenu li:active {
+    box-shadow: none;
+    transform: translate(0px, 0px);
+}
+#sideBarMenu:has(li:not(.selected):hover) li:not(:hover) {
+    opacity: 0.5;
+}
+.carrousselForm {
+    background-color: var(--red);
+    padding: 1em 2em;
+    z-index: -1;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    gap: 1em;
+}
+.carrousselForm button {
+    width: fit-content;
+
+}
+.preview {
+    background-color: var(--dark-red);
+    display: grid;
+    place-items: center;
+    font-size: 5rem;
+    min-width: 800px;
+    min-height: 300px;
+
+}
+.preview:hover {
+    background-color: var(--light-red);
+    box-shadow: 0px 0px 8px 2px var(--orange);
+}
+.preview img {
+    object-fit: fill;
+    object-position: center;
+    max-width: 700px;
+    max-height: 300px;
+}
+.currentCarroussel {
+    background-color: var(--red);
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    position: relative;
+    padding: 1em 2em;
+    gap: 0.4em;
+}
+.currentImg{
+    background-color: var(--dark-red);
+    width: 800px;
+    height: 400px;
+    display: grid;
+    user-select: none;
+    place-items: center;
+}
+.currentImg img {
+    max-width: 100%;
+    max-height: 400px;
+    object-fit: scale-down;
+    object-position: center;
+}
+.allImgs {
+    display: flex;
+    flex-flow: row nowrap;
+    gap: 0.3em;
+}
+.allImgs img {
+    width: 150px;
+    object-fit: scale-down;
+}
+#deleteBtn {
+    position:absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+.productsForms {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+}
+.productForm {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    width: 60dvw;
+    min-width: fit-content;
+    min-height: fit-content;
+    gap: 0.8em;
+    padding: 1em 2em;
+    background-color: var(--red);
+    position: relative;
+}
+.productForm span {
+    position: absolute;
+    
+}
+.productForm-inputs {
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 0.5em;
+}
+.productForm-inputs div{
+    display: grid;
+    
+    grid-template-columns: 1fr 1fr;
+}
+.buttonsDiv {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    place-items: center;
+}
+
+.productForm-inputs div label{
+    min-width: 100%;
+    font-size: 1.5rem;
+    display: grid;
+    place-items: center;
+}
+.productForm-inputs input[type="number"]{
+    width: 4rem;
+
+}
+.productForm-inputs input, .productForm-inputs textarea{
+    font-size: 1.5rem;
+    color: black;
+    resize: vertical;
+}
+.productForm-inputs select {
+    color: black;
+    width: 70%;
+    margin-left: 15%;
+    font-size: 1.5rem;
+}
+.productForm-inputs option {
+    color: black;
+    
+}
+.productImages {
+    gap: 0.5em;
+    display: flex;
+    justify-content: center;
+    flex-flow: row wrap;
+    height: fit-content;
+    text-align: center;
+}
+.productImages img {
+    aspect-ratio: 1/1;
+    cursor: pointer;
+    max-width: 100%;;
+}
+.imgTopIndex {
+    z-index: 5;
+}
+.imgsLabel {
+    display: grid;
+    place-items: center;
+    width: calc(50% - 1em);
+    position: relative;
+    aspect-ratio: 1/1;
+    background-color: var(--dark-red);
+    cursor: pointer;
+    font-size: 2rem;
+    color: black;
+}   
+.imgsLabel span {
+    display: grid;
+    width: 100%;
+    aspect-ratio: 1/1;
+    place-items: center;
+}
+
+.productVariantForm {
+    display: flex;
+    width: min(object-fit, 50dvw);
+    flex-flow: column nowrap;
+    align-items: center;
+    gap: 0.4em;
+    padding: 1em 2em;
+    background-color: var(--red);
+}
+.productVariantForm input, 
+.productVariantForm select, 
+.productVariantForm option {
+    font-size: 1.5rem;
+    color: black;
+
+}
+.add-sub-div {
+    cursor: pointer;
+    display: flex;
+    font-size: 1.5rem;
+    gap: 0.5em;
+    background: none;
+	border: none;
+	cursor: pointer;
+    padding: 0.3em 1em; 
+}
+.colorLabel {
+    font-size: 1.5rem;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    gap: 0.5em;
+}
+.colorLabel input[type="color"] {
+    width: 100px;
+}
+.colorLabel input[type="text"] {
+
+    width: 50%;
+}
+.variantOptions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5em;
+    min-width: 100%;
+    font-size: 1.3rem;
+    position: relative;
+}
+.trash{
+    position: absolute;
+    top: 0.3em;
+    right: 0.5em;
+}
+.variantOptions p {
+    width: fit-content;
+}
+.variantOptions input {
+    width: 60%;
+}
+
+.selectDiv{
+    width: 100%;
+    font-size: 1.5rem;
+    display: flex !important;
+    gap: 0.5em;
+    align-items: center;
+
+}
+.productList{
+    border: 3px solid black;
+    background-color: var(--red);
+}
+.productList tbody tr:hover{
+    background-color: var(--light-red);
+}
+.productList tbody {
+    cursor: pointer;
+}
+.productList tr, 
+.productList th{
+    user-select: none;
+    border: 2px solid black;
+    padding: 0.4em 1em;
+    font-size: 2rem;
+}
+.productList th:has(input){
+    display: flex;
+    flex-direction: row nowrap;
+    gap: 0.5em;
+    align-items: center;
+}
+.productList a {
+    text-decoration: none;
+    padding: none;
+    border: none;
+}
+.productModal h1{
+    width: 100%;
+    text-align: center;
+}
+
+.productModalMain {
+    display: grid;
+    grid-template-columns: 0.5fr 1fr;
+
+}
+.productModalMain div:has(img){
+    width: 100%;
+    display: grid;
+    place-items: center;
+    height: fit-content;
+}
+.productModalMain span{
+    border-radius: 24px;
+    width: fit-content;
+    height: fit-content;
+    overflow-y: auto;
+    padding: 2em;
+    background-color: var(--dark-red);
+}
+.productModalMain img{
+    width: 400px;
+    aspect-ratio: 1/1;
+}
+
+.productInfos{ 
+    display: flex;
+    flex-flow: row wrap;
+    gap: 1em;
+    font-size: 2rem;
+}
+.productInfos label{
+    border-radius: 24px;
+    background-color: var(--red);
+    width: calc(50% - 1em);
+    height: max(2rem, fit-content);
+    display: flex;
+    gap: 0.5em;
+    justify-content: center;
+    align-items: center;
+}
+.productInfos label:has(.desc){
+    width: 100%;
+}
+.tableHeader{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    place-items: center;
+    padding: 0.6em 0;
+    border: 3px double black;
+    border-bottom: transparent;
+    background-color: var(--red);
+}
+#productTable input[type="checkbox"] {
+    width: 2em;
+    cursor: pointer;
+    height: 2em;
+}
+.removeAll,
+.checkAll{
+    font-size: 2.5rem;
+    cursor:pointer;
+}
+.checkAll{
+    display: flex;
+    flex-direction: row nowrap;
+    align-items: center;
+    gap: 0.6em
+}
+.removeAll:hover, 
+.removeAll:focus {
+    text-decoration: underline;
+}

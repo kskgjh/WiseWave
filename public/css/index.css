@@ -1,0 +1,41 @@
+#carroussel {
+    min-width: 100vw;
+    height: 400px;
+    background-color: var(--dark-red);
+    display: grid;
+    place-items: center;
+    font-size: 3rem;
+    position: relative;
+    user-select: none;
+}
+#carroussel .main {
+    min-width: 100%;
+    display: grid;
+    place-items: center;
+}
+#carroussel i {
+    opacity: 0;
+    transition: opacity 300ms ease;
+}
+#carroussel .left,
+#carroussel .right {
+    top: 0;
+    position: absolute;
+    min-width: 200px;
+    min-height: 400px;
+    display: grid;
+    cursor: pointer;
+    place-items: center;
+}
+#carroussel .left {
+    left: 0;
+}
+#carroussel .right {
+    right: 0;
+}
+#carroussel .left:hover > i {
+    opacity: 1;
+}
+#carroussel .right:hover > i {
+    opacity: 1;
+}
