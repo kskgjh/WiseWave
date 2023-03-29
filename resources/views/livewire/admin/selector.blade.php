@@ -9,7 +9,10 @@
     @case('products')
     <div class="productsForms">
         @livewire('admin.products.product-form')
-        @livewire('admin.products.add-product-variants')
+        <div class="rightSide">
+            @livewire('admin.products.variants-form')
+            @livewire('admin.products.category-form')
+        </div>
     </div>
         @livewire('admin.products.product-list')
     @break

@@ -10,10 +10,6 @@ class Carroussel extends Component
     public $imgs = [];
     public $current = 0;
 
-
-
-
-
     public function render()
     {
         $this->imgs = bannerImage::all();

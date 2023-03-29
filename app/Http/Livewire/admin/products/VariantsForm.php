@@ -5,7 +5,7 @@ namespace App\Http\Livewire\Admin\Products;
 use App\Models\Variant;
 use Livewire\Component;
 
-class AddProductVariants extends Component
+class VariantsForm extends Component
 {
     public string $variantTitle;
     public int $type = 1;
@@ -17,7 +17,7 @@ class AddProductVariants extends Component
 
     public function render()
     {
-        return view('livewire.admin.products.add-product-variants');
+        return view('livewire.admin.products.variants-form');
     }
 
     public function addVariant(){

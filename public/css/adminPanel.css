@@ -146,6 +146,11 @@
     align-items: center;
     gap: 1em;
 }
+.productsForms .rightSide {
+    display: flex;
+    gap: 1em;
+    flex-flow: column nowrap;
+}
 .productForm {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -157,6 +162,9 @@
     background-color: var(--red);
     position: relative;
 }
+.productForm .category {
+    width: 100%;
+}
 .productForm span {
     position: absolute;
     
@@ -166,9 +174,8 @@
     flex-flow: column nowrap;
     gap: 0.5em;
 }
-.productForm-inputs div{
+.productForm-inputs .amountDiv {
     display: grid;
-    
     grid-template-columns: 1fr 1fr;
 }
 .buttonsDiv {
@@ -300,10 +307,16 @@
 .selectDiv{
     width: 100%;
     font-size: 1.5rem;
-    display: flex !important;
+    display: grid ;
+    grid-template-columns: 1fr 1fr;
     gap: 0.5em;
     align-items: center;
 
+}
+.selectDiv div:is(#parentMainMenu){
+    width: 100%;
+    display: grid;
+    place-items: center;
 }
 .productList{
     border: 3px solid black;
@@ -409,4 +422,54 @@
 .removeAll:hover, 
 .removeAll:focus {
     text-decoration: underline;
+}
+.categoryForm {
+    background-color: var(--red);    
+    padding: 1em;
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 0.7em;
+    align-items: center;
+}
+.categoryForm select,
+.categoryForm option,
+.categoryForm optgroup,
+.categoryForm input {
+    color: black;
+    font-size: 1.5rem;
+    
+}
+.categoryForm .parentCategory {
+    width: 100%;
+}
+.categoryDropMenu {
+    position: relative;
+    font-size: 1.5rem;
+    user-select: none;
+
+}
+.categoryDropMenu label{
+    width: 100%;
+    border: 2px solid black;
+    display: flex !important;
+    flex-flow: row nowrap;
+    gap: 0.3em;
+    padding: 0.3em 0.7em;
+    background-color: whitesmoke;
+    color: black;
+    justify-content: center;
+    align-items: center;
+}
+.categoryDropMenu i::before{
+    font-size: 1.3rem;
+    color: black !important;
+}
+.categorySelected {
+    background-color: gray !important;
+}
+.categoryMenu{
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
 }

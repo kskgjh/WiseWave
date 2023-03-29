@@ -1,11 +1,11 @@
+@if(count($imgs) > 0)
 <div x-data="carroussel()" @mouseover="stopInterval()" @mouseleave="startInterval()">
     <section id="carroussel">
         <div class="left" @click="changeImg(-1)">
             <i class="fa-solid fa-chevron-left"></i>
         </div>
         <div class="main">
-            @if(count($imgs) > 0)
-            <img :src="`assets/imgs/carroussel/${images[current].imgName}`" /> @endif
+            <img :src="`http://localhost:8000/assets/imgs/carroussel/${images[current].imgName}`" /> 
         </div>
         <div class="right" @click="changeImg(1)">
             <i class="fa-solid fa-chevron-right"></i>
@@ -19,17 +19,17 @@
             interval: null,
             init(){
                 this.startInterval()
+                console.log(this.interval)
             },
             startInterval(){
                 this.interval = setInterval(() => {
                     this.changeImg(1)
-                }, 3000);
+                }, 3500);
             },
             stopInterval(){
                 clearInterval(this.interval)
             },
             changeImg(direction){
-                console.log(`carroussel changing in `, direction)
                 if(this.current + direction < 0) return this.current = this.images.length - 1 
                 if(this.current + direction == this.images.length) return this.current = 0 
 
@@ -39,3 +39,4 @@
         }
     </script>
 </div>
+@endif

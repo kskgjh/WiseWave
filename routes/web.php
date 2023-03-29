@@ -34,7 +34,8 @@ Route::prefix('/product')
     ->controller(ProductController::class)
     ->middleware('admin')
     ->group(function (){
-        Route::post('/variant/{amount}', 'addVariant')->name('add.variant');
-        Route::get('/variant/{id}', 'getVariant')->name('get.variant');
-        Route::get('/del/{id}', 'delete')->name('delete.product');
-    });
+        Route::post('/variant/{amount}', 'addVariant')->name('product.add.variant');
+        Route::get('/variant/{id}', 'getVariant')->name('product.get.variant');
+        Route::get('/del/{id}', 'delete')->name('product.delete');
+        Route::post('/category', 'addCategory')->name('product.add.category');
+});

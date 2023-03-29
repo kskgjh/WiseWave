@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use Illuminate\Support\Facades\Storage;
 use App\Models\variantOptions;
 use Illuminate\Http\Response;
@@ -85,5 +86,28 @@ class ProductController extends Controller
         $variant = Variant::find($req->id);
 
         return $variant;
+    }
+
+    public function addCategory(Request $req){
+        $rules = [
+            'name'=> ['unique:categories,name', 'required']
+        ];
+        $messages = [
+            'name.required'=> 'Por favor insira o nome a categoria.',
+            'name.unique'=> 'Esta categoria ja existe.'
+        ];
+
+        $req->validate($rules, $messages);
+
+
+        $category = new Category([
+            'name'=> $req->name,
+            'type'=> $req->type
+        ]);
+
+        if($req->type == 'child') $category->parent_id = $req->parent_id;
+
+        $category->save();
+        return back()->with('success', 'Categoria salva com sucesso.');
     }
 }

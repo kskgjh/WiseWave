@@ -35,7 +35,7 @@
             cols="15" 
             rows="6" 
             placeholder="Descrição do item"></textarea>
-        <div>
+        <div class="amountDiv">
             <label>Quantidade em estoque:  
                 <input 
                     type="number" 
@@ -60,6 +60,7 @@
         </div>
 
         <div class="selectDiv">
+            <div>
             <select wire:model="variant" x-model="select">
                 <option value="null" disabled selected>Selecionar uma variação</option>
                 @foreach ($variants as $variant)
@@ -67,7 +68,8 @@
                 @endforeach
             </select>
             <i class="fa-solid fa-rotate-left" x-on:click="resetSelect()"></i>
-              
+            </div>
+            @livewire('admin.products.category-selector')
         </div>
 
         <div class="buttonsDiv">
@@ -128,7 +130,6 @@
         return{
             select: 'null',
             resetSelect(){
-                console.log('aaaa');
                 this.select = 'null'
             }
         }

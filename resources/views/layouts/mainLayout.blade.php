@@ -13,7 +13,7 @@
     @livewireStyles
     <title>@yield('title')</title>
 </head>
-<body>
+<body class="sticky">
     @livewire('header')
 
     <main>

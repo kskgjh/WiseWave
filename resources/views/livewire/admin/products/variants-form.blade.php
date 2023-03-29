@@ -1,8 +1,6 @@
 <div>
-    {{-- {{print_r(session()->all())}} --}}
-    {{-- {{session()->forget('variantMsg')}} --}}
     <form 
-        action="{{route('add.variant', ['amount'=> $variants])}}" 
+        action="{{route('product.add.variant', ['amount'=> $variants])}}" 
         method="POST"
         class="productVariantForm" 
         >
