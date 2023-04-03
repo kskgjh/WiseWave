@@ -1,2 +1,2 @@
 import './axios';
-import './alpine';
+import './alpine/start';

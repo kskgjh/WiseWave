@@ -13,7 +13,7 @@ class productImgSeeder extends Seeder
      */
     public function run(): void
     {
-        productImg::factory(30)
+        productImg::factory(40)
             ->for(Product::class)
             ->create();
     }

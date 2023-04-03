@@ -3,7 +3,6 @@
 namespace App\Http\Livewire\Admin\Products;
 
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Validation\Rules\File;
 use App\Rules\ProductValueRule;
 use Illuminate\Support\Carbon;
 use Livewire\WithFileUploads;
@@ -110,7 +109,7 @@ class ProductForm extends Component
             $imagesArr = [];
             foreach ($this->images as $image){
 
-                $imageName = md5(Carbon::now()->timestamp) .'.'. $image->extension();
+                $imageName = uniqid() .'.'. $image->extension();
                     if($image->storeAs('imgs/product', $imageName)) {
 
                     $imgDone = new productImg([

@@ -26,7 +26,6 @@
             @endif>
             Produtos
         </li>
-        <li>Categorias</li>
         <li>Sobre nós</li>
         <li>Contatos</li>
     </ul>

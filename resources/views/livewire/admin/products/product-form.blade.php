@@ -1,4 +1,4 @@
-<div x-data="productForm()">
+<div x-data="{ select: 'null', resetSelect(){this.select = 'null'} }">
 <form 
     method="POST" 
     class="productForm" 
@@ -125,15 +125,4 @@
         </div>
     </div>
 </div>
-<script>
-    function productForm(){
-        return{
-            select: 'null',
-            resetSelect(){
-                this.select = 'null'
-            }
-        }
-    }
-
-</script>
 </div>

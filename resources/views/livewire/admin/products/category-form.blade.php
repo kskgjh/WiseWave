@@ -3,7 +3,7 @@
         action="{{route('product.add.category')}}" 
         method="post" 
         class="categoryForm" 
-        x-data="categoryForm()">
+        x-data="{ type: 'parent' }">
         @csrf
         @if(session()->has('success'))
             {{session('success')}}
@@ -29,13 +29,4 @@
 
         <button class="btn-1">Cadastrar</button>
     </form>
-    <script>
-    function categoryForm(){
-    return {
-        type: 'parent',
-
-    }
-    }
-
-    </script>
 </div>

@@ -43,10 +43,9 @@ class userController extends Controller
             'password'=> bcrypt($req->password),
             'admin'=> $admin,
         ]);
+        if($res) return $this->authenticate($req);
 
-        if($res) return redirect()->route('user.login', ['email'=>$req->email]);
-
-        return 'Não foi possivel cadastrar a conta. Tente novamente mais tarde.';
+        return back()->with('error', 'Não foi possivel cadastrar a conta. Tente novamente mais tarde.');
     } 
 
     public function authenticate(Request $req){

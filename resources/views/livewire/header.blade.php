@@ -1,5 +1,5 @@
 
-<header id="header">
+<header id="header" x-data="header({msg: 'ola mundo'})">
     <div class="left">
         @if (Request::getRequestUri() !== "/" )
         <a href="/" class="hoverEffect-1">Inicio</a>
@@ -10,12 +10,13 @@
         <a href="" class="hoverEffect-1">Contatos</a>
     </div>
 
+
     @guest
     <div class="right">
-        <div class="dropDown" x-data="dropDown()">
+        <div class="dropDown">
             <a class="cursor-pointer" x-on:mouseover="open = true">Entrar</a>
-                <div x-show="open" x-on:click.outside="toggle()" class="dropMenu">
-                    @livewire('login-form')
+                <div x-show="open" x-cloak x-on:click.outside="toggle()" class="dropMenu">
+                        @livewire('login-form')
                 </div>
         </div>
 
@@ -29,7 +30,7 @@
         <a href="/logout">Sair</a>
         @if (auth()->user()->admin)
         <span> | </span>
-        @if (Request::getRequestUri() === '/admin')
+        @if (request()->route()->uri === 'admin')
             @livewire('admin.side-bar')
         @else
         <a href="/admin">Painel</a>
@@ -37,14 +38,5 @@
         @endif
     </div>
     @endauth
-    <script>
-        function dropDown(){
-            return {
-                open: false,
-                toggle() { this.open = !this.open }
-            }
-        }
-
-    </script>
 </header>
 

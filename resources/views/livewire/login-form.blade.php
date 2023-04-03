@@ -9,11 +9,9 @@
         type="email" 
         placeholder="Email"
         autocomplete="email"
-        @isset($email)
-        value='{{$email}}'
-        @endisset
-        name='email' />
-
+        name='email'
+        autofocus />
+        
 
     @error('password')
         <span>Por favor, insira uma senha</span>
@@ -21,17 +19,12 @@
     <input
     type="password" 
     placeholder="Senha"
-    @isset($email)
-        autofocus
-    @endisset
     autocomplete="password"
     name='password'
     id='password' />
     <div>
-
-    <a href="{{route('register.render')}}">Cadastrar-se</a>
+        <a href="{{route('register.render')}}">Cadastrar-se</a>
     </div>
 
     <button class="btn-1">Enviar</button>
-
 </form>

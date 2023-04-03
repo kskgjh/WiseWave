@@ -18,7 +18,7 @@ class productImgFactory extends Factory
 
         return [
             'name'=> $this->faker->imageUrl(),
-            'product_id'=> Product::factory()->create()
+            'product_id'=> Product::factory()
         ];
     }
 }

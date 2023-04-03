@@ -18,6 +18,7 @@ return new class extends Migration
             $table->boolean('status');
             $table->string('text')->nullable();
             $table->integer('amount');
+            $table->integer('sales')->default(0);
             $table->foreignId('variants_id')->nullable();
         });
     }

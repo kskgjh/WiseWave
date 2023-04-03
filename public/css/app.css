@@ -28,6 +28,12 @@ body {
     background-color: var(--bg-color);
 }
 
+.scrollLock{
+    overflow-y: hidden !important;
+}
+.relative{
+    position: relative;
+}
 #header {
     display: grid;
     position: sticky;

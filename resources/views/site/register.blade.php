@@ -12,7 +12,9 @@
 
     <form action='{{route('user.register')}}' method="POST" class="form-1"> 
         @csrf
-        
+        @error('error')
+            {{$message}}
+        @enderror
         @error('userName') <span class="messageError">{{$message}}</span> @enderror
         <input 
             type='text' 
@@ -46,10 +48,12 @@
             name='password_confirmation' 
             @error('confirmPass') class="invalidField" @enderror
             autocomplete="new-password"/>
-
-        <label>Mostrar a senha
-            <input type='checkbox' id='checkbox' />
-        </label>
+        <div>
+            <label>Mostrar a senha
+                <input type='checkbox' id='checkbox' />
+            </label>
+            <a href="{{route('user.auth')}}">Entrar</a>
+        </div>
         <div class="rowDiv">
         <button type='submit' class="btn-1">Cadastrar</button>
         <a href="{{url()->previous()}}" class="btn-1 btn-link">Voltar</a>
