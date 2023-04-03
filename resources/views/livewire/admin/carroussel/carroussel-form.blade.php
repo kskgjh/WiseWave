@@ -1,7 +1,7 @@
 <div>
 <form class="carrousselForm " wire:submit.prevent="uploadImg">
     @error('image')
-    <span>Insira uma imagem por favor </span>
+        <span>Insira uma imagem por favor </span>
     @enderror
     @if(session()->has('message'))
     {{session('message')}}

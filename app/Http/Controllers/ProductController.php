@@ -13,6 +13,11 @@ use App\Models\Variant;
 
 class ProductController extends Controller
 {
+
+    public function all(){
+        return Product::with('productImgs')->paginate(20);
+    }
+
     public function addVariant(Request $req){
 
         $optionsAmount = $req->amount;
