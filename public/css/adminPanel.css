@@ -30,6 +30,9 @@
     align-items: center;
     transition: transform 500ms ease-out;
 }
+.sideBarHide{
+    transform: translateX(100%);
+}
 #sideBarMenu h1 {
     font-size: 4rem;
 }
@@ -38,6 +41,9 @@
     display: flex;
     flex-flow: column nowrap;
     gap: 1em;
+}
+#sideBarMenu a:hover {
+    text-decoration: none !important;
 }
 .selected {
     background-color: var(--light-red);
@@ -79,6 +85,20 @@
     align-items: center;
     gap: 1em;
 }
+
+.bannerDesc{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+}
+.bannerDesc input {
+    color: black;
+    font-size: 1.5rem;
+    padding: 0.3rem 1rem;
+    border: none;
+}
 .carrousselForm button {
     width: fit-content;
 
@@ -111,11 +131,19 @@
     padding: 1em 2em;
     gap: 0.4em;
 }
+.banner-delete {
+    position: absolute;
+    font-size: 6rem;
+    top: calc(50% - 3rem);
+    left: calc(50% - 3rem);
+    opacity: 0.9;
+}
 .currentImg{
     background-color: var(--dark-red);
     width: 800px;
     height: 400px;
     display: grid;
+    position: relative;
     user-select: none;
     place-items: center;
 }
@@ -124,6 +152,7 @@
     max-height: 400px;
     object-fit: scale-down;
     object-position: center;
+    cursor: pointer;
 }
 .allImgs {
     display: flex;

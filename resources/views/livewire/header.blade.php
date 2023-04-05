@@ -15,7 +15,16 @@
     <div class="right">
         <div class="dropDown">
             <a class="cursor-pointer" x-on:mouseover="open = true">Entrar</a>
-                <div x-show="open" x-cloak x-on:click.outside="toggle()" class="dropMenu">
+            <div @click.outside="toggle()" 
+                 x-show="open"
+                 x-cloak
+                 x-transition:enter.duration.300ms
+                 x-transition:leave.duration.500ms
+                 x-transition:enter-start.scale.85
+                 x-transition:enter-end.scale.100
+                 x-transition:leave-start.scale.100
+                 x-transition:leave-end.scale.85
+                 class="dropMenu">
                         @livewire('login-form')
                 </div>
         </div>

@@ -1,4 +1,46 @@
-export default function productList() {
+export function adminSelector(){
+    return {
+        current: 'Resumos',
+        changePage(event){
+            console.log(event)
+            this.current = event.detail
+        },
+        init(){
+            let url = window.location.href
+
+            if(url.match('carrossel')) return this.current = 'Carrossel'
+            if(url.match('overview')) return this.current = 'Resumos'
+
+            let params = new URLSearchParams(window.location.search)
+            
+            if(params.get('page')) return this.current = 'Produtos'
+
+        }
+
+    }
+}
+export function adminSideBar(){
+    return {
+        hidden: false,
+        toggleSideBar(){this.hidden = !this.hidden},
+        toggleSelected(target){
+            let listEl = document.querySelector("#sideBarMenu");
+            let list = listEl.children 
+            let arr = Array.from(list)
+
+            if(target == listEl) return 
+
+            arr.forEach((element)=> {
+                if(element.classList.contains('selected')) element.classList.remove('selected');
+            })
+
+            target.classList.add('selected')
+            let event = new CustomEvent('change-page', {detail: target.innerText})
+            dispatchEvent(event)
+        }
+    }
+}
+export function productList() {
     return {
         products: [],
         somethingSelected: false,
@@ -241,4 +283,55 @@ export default function productList() {
         },
     };
 }
+export function carrousselForm(){
+    return {
+        imagePath: null,
+        getPath(e){
+            if(e.target.files.length == 0) return
+            let file = e.target.files[0]
+            console.log(file)
+            const reader = new FileReader
+            reader.readAsDataURL(file)
+            reader.onload = ev=> { this.imagePath = ev.target.result }
 
+        },
+    }
+}
+export function currentCarroussel(){
+    return {
+        currentTitle: null,
+        currentAlt: null,
+        currentImg: null,
+        currentId: null,
+        modal: false,
+        hovering: false,
+        images: [],
+        init(){
+            console.log('current carroussel init')
+            this.getImgs()
+        },
+        toggleModal(){this.modal = !this.modal},
+        async getImgs(){
+            await axios.get("http://localhost:8000/banner")
+                .then((result) => {
+                    console.log(result)
+                    if(!result.data[0]) return;
+                    this.images = result.data;
+                    this.currentImg = `assets/imgs/carroussel/${result.data[0].path}`;
+                    this.currentId = result.data[0].id;
+                    this.currentTitle = result.data[0].title;
+                    this.currentAlt = result.data[0].alt;
+                }).catch((err) => {
+                    console.log(err)
+                    alert('Ocorreu um problema ao buscar os banners, por favor recarregue a peagina');
+                });
+        },
+        changeImg(path, id){
+            this.currentId = id
+            this.currentImg = `assets/imgs/carroussel/${path}`
+        },
+        deleteImg(){
+            this.toggleModal()
+        }
+    }
+}

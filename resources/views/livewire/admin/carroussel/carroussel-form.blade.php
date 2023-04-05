@@ -1,26 +1,39 @@
-<div>
-<form class="carrousselForm " wire:submit.prevent="uploadImg">
+<form class="carrousselForm " enctype="multipart/form-data" method="post" action="{{route('banner.save')}}"  x-data="carrousselForm">
+    @csrf
     @error('image')
         <span>Insira uma imagem por favor </span>
     @enderror
     @if(session()->has('message'))
     {{session('message')}}
     @endif
-    <input type='file' class="hidden" name="image" id="image" wire:model="image" />
+    <input type='file' class="hidden" name="image" id="image" @change="getPath($event)" />
 
     <label for="image" class="preview">
-        @if ($image) 
-        <img src="{{$image->temporaryUrl()}}" alt="">
-        @else
-        <i class="fa-solid fa-image"></i>
-        @endif
+
+        <template x-if="imagePath">
+            <img :src="imagePath">
+        </template> 
+        <template x-if="!imagePath">
+            <i class="fa-solid fa-image"></i>
+        </template> 
+
     </label>
+    <div class="bannerDesc">
+        <label class="flex-column">
+            @error('title')
+                {{$message}}
+            @enderror
+            <input type="text" name="title" placeholder="Nome da imagem">
+        </label>
+        <label>
+            <input type="text" name="alt" placeholder="Descrição da imagem">
+        </label>
+    </div>
     <button type="submit" class="btn-1" >
         <span wire:loading wire:target="uploadImg" wire:key="uploadImg">
-        <i class="fa-solid fa-spinner spinning"></i>
+            <i class="fa-solid fa-spinner spinning"></i>
         </span>
         Enviar
      </button>    
 </form>
 
-</div>

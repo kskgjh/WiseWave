@@ -105,8 +105,7 @@ body {
     right: 0.2em;
 }
 .hidden {
-    display: none;
-    visibility: hidden;
+    display: none !important;
 }
 
 .btn-1 {
@@ -244,7 +243,11 @@ body {
     width: fit-content;
     right: 100%;
 }
-
+.flex-column{
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 0.5em;
+}
 
 
 @keyframes spinning {

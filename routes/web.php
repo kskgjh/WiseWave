@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\adminController;
+use App\Http\Controllers\bannerImgController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ProductController;
@@ -19,9 +20,17 @@ Route::prefix('/user')
     ->group(function (){
         Route::post('/login', 'authenticate')->name('user.auth');
         Route::post("/register", 'submit')->name('user.register');
-        
 
 });
+
+Route::prefix('/banner')
+    ->controller(bannerImgController::class)
+    ->middleware('admin')
+    ->group(function(){
+        Route::post('/', 'save')->name('banner.save');
+        Route::get('/', 'all')->name('banner.all');
+        Route::delete('/del', 'delete')->name('banner.delete');
+    });
 
 Route::prefix('/admin')
     ->controller(adminController::class)
