@@ -13,12 +13,14 @@ class ProductList extends Component
 {
     use WithPagination;
     public Collection $variants;
+    public $msg;
     public int $currentPage;
 
     protected $listeners = ['productCreated' => 'render',
                              'delSelected'=> 'delSelected'];
 
     public function delSelected(array $ids){
+        $this->msg = "deletando";
         foreach($ids as $id){
             productImg::where('product_id', $id)->delete();
         }

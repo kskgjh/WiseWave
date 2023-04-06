@@ -2,6 +2,7 @@
      @add-product.window="addProduct($event)" 
      id="productTable"
      @current-page.window="getProducts($event)">
+     {{$msg}}
 @if(count($products) > 0)
     <div class="tableHeader">
         <label class='checkAll'>

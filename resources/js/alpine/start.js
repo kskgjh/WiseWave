@@ -1,6 +1,6 @@
 import Alpine from 'alpinejs';
 import {
-    productList, currentCarroussel, adminSelector, carrousselForm, adminSideBar
+    productList, currentCarroussel, adminSelector, carrousselForm, adminSideBar, categorySelector
 } from './admin'
 
 import header from './global';
@@ -14,6 +14,6 @@ window.carrousselForm = carrousselForm
 window.adminSelector = adminSelector
 window.adminSideBar = adminSideBar
 window.productList = productList
-
+window.categorySelector = categorySelector
 window.Alpine = Alpine;
 Alpine.start();

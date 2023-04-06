@@ -1,50 +1,67 @@
-export function adminSelector(){
+export function adminSelector() {
     return {
-        current: 'Resumos',
-        changePage(event){
-            console.log(event)
-            this.current = event.detail
+        current: "Resumos",
+        changePage(event) {
+            console.log(event);
+            this.current = event.detail;
         },
-        init(){
-            let url = window.location.href
-
-            if(url.match('carrossel')) return this.current = 'Carrossel'
-            if(url.match('overview')) return this.current = 'Resumos'
-
-            let params = new URLSearchParams(window.location.search)
+        init() {
+            let url = window.location.href;
+            let params = new URLSearchParams(new URL(url).search);
             
-            if(params.get('page')) return this.current = 'Produtos'
+            if (url.match("carrossel")) {
+                this.current = "Carrossel";
+                document.getElementById("carrossel").classList.add("selected");
+                return;
+            }
+            if (url.match("overview")) {
+                this.current = "Resumos";
+                document.getElementById("overview").classList.add("selected");
+                return;
+            }
+            if (url.match("products") || params.get('page')) {
+                this.current = "Produtos";
+                document.getElementById("products").classList.add("selected");
+                return;
+            }
 
-        }
+            // let params = new URLSearchParams(window.location.search)
 
-    }
+            // if(params.get('page')) return this.current = 'Produtos'
+        },
+    };
 }
-export function adminSideBar(){
+export function adminSideBar() {
     return {
         hidden: false,
-        toggleSideBar(){this.hidden = !this.hidden},
-        toggleSelected(target){
+        toggleSideBar() {
+            this.hidden = !this.hidden;
+        },
+        toggleSelected(target) {
             let listEl = document.querySelector("#sideBarMenu");
-            let list = listEl.children 
-            let arr = Array.from(list)
+            let list = listEl.children;
+            let arr = Array.from(list);
 
-            if(target == listEl) return 
+            if (target == listEl) return;
 
-            arr.forEach((element)=> {
-                if(element.classList.contains('selected')) element.classList.remove('selected');
-            })
+            arr.forEach((element) => {
+                if (element.classList.contains("selected"))
+                    element.classList.remove("selected");
+            });
 
-            target.classList.add('selected')
-            let event = new CustomEvent('change-page', {detail: target.innerText})
-            dispatchEvent(event)
-        }
-    }
+            target.classList.add("selected");
+            let event = new CustomEvent("change-page", {
+                detail: target.innerText,
+            });
+            dispatchEvent(event);
+        },
+    };
 }
 export function productList() {
     return {
         products: [],
         somethingSelected: false,
-        howManySelected: 0,
+        howManySelected: null,
         modal: false,
         selected: [],
         volumes: 0,
@@ -62,16 +79,14 @@ export function productList() {
                 if (e.key == "Escape" && this.modal) this.toggleModal();
             });
 
-            let params = new URLSearchParams(window.location.search)
-            this.page = params.get('page')
-            this.getProducts()            
+            let params = new URLSearchParams(window.location.search);
+            this.page = params.get("page");
+            this.getProducts();
         },
         async getProducts() {
-            console.log("serch for page: ",this.page)
             await axios
                 .get(`http://localhost:8000/product/all/?page=${this.page}`)
                 .then((result) => {
-                    console.log(result);
                     this.products = result.data.data;
                 })
                 .catch((err) => {
@@ -142,14 +157,11 @@ export function productList() {
             body.classList.add("scrollLock");
         },
         addProduct(e) {
-            console.log(e)
+            console.log(e);
             let product = e.detail.product;
             let images = e.detail.images;
             product.images = images;
             this.products.push(product);
-        },
-        aaa(e) {
-            console.log(e);
         },
         select(id) {
             console.log(`select id: ${id}`);
@@ -167,7 +179,7 @@ export function productList() {
             this.howManySelected = this.selected.length;
         },
         isSelected(id) {
-            console.log(this.page)
+            console.log(this.page);
             const checkbox = this.$refs[`check_${id}`];
             if (checkbox.checked) return this.productPage(id);
             checkbox.checked = true;
@@ -213,7 +225,7 @@ export function productList() {
             this.selected = [];
             this.somethingSelected = false;
             this.$refs.checkAll.checked = false;
-            this.howManySelected = this.selected.length;
+            this.howManySelected = null;
         },
         addDimensions(e) {
             let el = e.target;
@@ -283,21 +295,22 @@ export function productList() {
         },
     };
 }
-export function carrousselForm(){
+export function carrousselForm() {
     return {
         imagePath: null,
-        getPath(e){
-            if(e.target.files.length == 0) return
-            let file = e.target.files[0]
-            console.log(file)
-            const reader = new FileReader
-            reader.readAsDataURL(file)
-            reader.onload = ev=> { this.imagePath = ev.target.result }
-
+        getPath(e) {
+            if (e.target.files.length == 0) return;
+            let file = e.target.files[0];
+            console.log(file);
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (ev) => {
+                this.imagePath = ev.target.result;
+            };
         },
-    }
+    };
 }
-export function currentCarroussel(){
+export function currentCarroussel() {
     return {
         currentTitle: null,
         currentAlt: null,
@@ -306,32 +319,91 @@ export function currentCarroussel(){
         modal: false,
         hovering: false,
         images: [],
-        init(){
-            console.log('current carroussel init')
-            this.getImgs()
+        init() {
+            console.log("current carroussel init");
+            this.getImgs();
         },
-        toggleModal(){this.modal = !this.modal},
-        async getImgs(){
-            await axios.get("http://localhost:8000/banner")
+        toggleModal() {
+            this.modal = !this.modal;
+        },
+        async getImgs() {
+            await axios
+                .get("http://localhost:8000/banner")
                 .then((result) => {
-                    console.log(result)
-                    if(!result.data[0]) return;
+                    console.log(result);
+                    if (!result.data[0]) return;
                     this.images = result.data;
                     this.currentImg = `assets/imgs/carroussel/${result.data[0].path}`;
                     this.currentId = result.data[0].id;
                     this.currentTitle = result.data[0].title;
                     this.currentAlt = result.data[0].alt;
-                }).catch((err) => {
-                    console.log(err)
-                    alert('Ocorreu um problema ao buscar os banners, por favor recarregue a peagina');
+                })
+                .catch((err) => {
+                    console.log(err);
+                    alert(
+                        "Ocorreu um problema ao buscar os banners, por favor recarregue a peagina"
+                    );
                 });
         },
-        changeImg(path, id){
-            this.currentId = id
-            this.currentImg = `assets/imgs/carroussel/${path}`
+        changeImg(path, id) {
+            this.currentId = id;
+            this.currentImg = `assets/imgs/carroussel/${path}`;
         },
-        deleteImg(){
-            this.toggleModal()
-        }
-    }
+        deleteImg() {
+            this.toggleModal();
+        },
+    };
+}
+export function categorySelector() {
+    return {
+        selected: "Selecione a categoria",
+        parent_id: null,
+        menu: false,
+        toggleMenu(e) {
+            console.log(e);
+            this.menu = !this.menu;
+            console.log(this.menu);
+        },
+        toggleSubMenu(id, target = false) {
+            let menu = this.$refs[`menu_${id}`];
+
+            if (!target) {
+                target = menu.parentElement.children[0].children[0];
+            }
+            if (target) {
+                if (target.classList.contains("fa-chevron-down")) {
+                    target.classList.add("fa-chevron-up");
+                    target.classList.remove("fa-chevron-down");
+                } else {
+                    target.classList.remove("fa-chevron-up");
+                    target.classList.add("fa-chevron-down");
+                }
+            }
+
+            if (menu.classList.contains("hidden")) {
+                return menu.classList.remove("hidden");
+            }
+            menu.classList.add("hidden");
+        },
+        select(id, el, option) {
+            let dropMenu = document.querySelector("#parentMainMenu");
+            let alredySelected = dropMenu.querySelectorAll(".categorySelected");
+            if (alredySelected) {
+                alredySelected.forEach((element) => {
+                    element.classList.remove("categorySelected");
+                });
+                setTimeout(() => {
+                    this.menu = false;
+                }, 300);
+            }
+
+            this.parent_id = id;
+            this.selected = option;
+            el.classList.add("categorySelected");
+        },
+        resetCategory() {
+            this.parent_id = null;
+            this.selected = "Selecione a categoria";
+        },
+    };
 }

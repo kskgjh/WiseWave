@@ -51,7 +51,7 @@
 #sideBarMenu:first-child {
     margin-bottom: 2rem;
 }
-#sideBarMenu li {
+#sideBarMenu a {
     display: block;
     user-select: none;
     padding: 0.3em 0.5em;
@@ -350,6 +350,7 @@
     place-items: center;
 }
 .productList{
+    width: 100%;
     border: 3px solid black;
     background-color: var(--red);
 }
@@ -478,6 +479,11 @@
     border: 3px double black;
     border-bottom: transparent;
     background-color: var(--red);
+}
+#productTable{
+    width: 70%;
+    margin-inline: auto;
+    margin-top: 3rem;
 }
 #productTable input[type="checkbox"] {
     width: 2em;

@@ -13,11 +13,11 @@
         @click="toggleSelected($event.target)" 
         @click.outside="hidden ? toggleSideBar : '' ">
 
-        <a href="#overview"><li class="selected">Resumos</li></a>
+        <li id="overview"><a href="#overview">Resumos</a></li>
         <h2>Editar</h2>
-        <a href="#carrossel"><li>Carrossel</li></a>
-        <li>Produtos</li>
-        <li>Sobre nós</li>
-        <li>Contatos</li>
+        <li id="carrossel"><a href="#carrossel">Carrossel</a></li>
+        <li id="products"><a href="#products">Produtos</a></li>
+        <li><a href="">Sobre nós</a></li>
+        <li><a href="">Contatos</a></li>
     </ul>
 </section>

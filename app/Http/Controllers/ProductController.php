@@ -17,7 +17,6 @@ class ProductController extends Controller
     public function all(){
         return Product::with('productImgs')->paginate(20);
     }
-
     public function addVariant(Request $req){
 
         $optionsAmount = $req->amount;
@@ -67,14 +66,10 @@ class ProductController extends Controller
 
                 $option->save();
 
-
-
         }
         return back()->with('sucess', true);
-        
     }
     }   
-
     public function delete(Request $req){
         Product::destroy($req->id);
 
@@ -86,14 +81,13 @@ class ProductController extends Controller
         }
         return back();
     }
-
     public function getVariant(Request $req){
-        $variant = Variant::find($req->id);
-
-        return $variant;
+        return Variant::find($req->id);
     }
-
     public function addCategory(Request $req){
+        $previous = url()->previous();
+        $backUrl = "$previous#products";
+
         $rules = [
             'name'=> ['unique:categories,name', 'required']
         ];
@@ -113,6 +107,9 @@ class ProductController extends Controller
         if($req->type == 'child') $category->parent_id = $req->parent_id;
 
         $category->save();
-        return back()->with('success', 'Categoria salva com sucesso.');
+        return redirect()->to($backUrl)->with('success', 'Categoria salva com sucesso.');
+    }
+    public function allCategories(){
+        return Category::with('children')->get();
     }
 }
