@@ -10,10 +10,11 @@
         <a href="" class="hoverEffect-1">Contatos</a>
     </div>
 
-
+    @if(Request::getRequestUri() !== '/register' &&
+        Request::getRequestUri() !== '/admin/register')
     @guest
     <div class="right">
-        <div class="dropDown">
+        <div class="relative">
             <a class="cursor-pointer" x-on:mouseover="open = true">Entrar</a>
             <div @click.outside="toggle()" 
                  x-show="open"
@@ -30,9 +31,14 @@
         </div>
 
         <span>|</span>
+        @if($someUser)
         <a href="/register">Cadastrar-se</a>
+        @else
+        <a href="{{route('admin.register')}}">Cadastrar-se</a>
+        @endif
     </div>
     @endguest
+    @endif
 
     @auth
     <div class="right">   

@@ -2,7 +2,7 @@
      @add-product.window="addProduct($event)" 
      id="productTable"
      @current-page.window="getProducts($event)">
-     {{$msg}}
+
 @if(count($products) > 0)
     <div class="tableHeader">
         <label class='checkAll'>
@@ -12,7 +12,7 @@
         </label>
         <span @click="delSelected" x-show="somethingSelected" x-cloak class="removeAll">Remover Selecionados</span>
     </div>
-
+    {{$msg}}
     <table class="productList" >
         <thead>
         <tr>
@@ -37,9 +37,16 @@
             <th>{{$product->status}}</th>    
             <th>{{$product->amount}}</th>    
             <th>
-                 <a @click.stop href="{{route('product.delete', ['id'=> $product->id])}}"> 
+                <form 
+                    method="post" 
+                    id="delForm_{{$product->id}}" 
+                    action="{{route('product.delete', ['id'=> $product->id])}}" 
+                    class="delForm"
+                    @click.stop="handleDelForm({{$product->id}})">
+                    @csrf 
+                    @method('delete')
                     <i class="fa-solid fa-trash"></i>
-                </a>
+                </form>
             </th>
         </tr>
         @endforeach

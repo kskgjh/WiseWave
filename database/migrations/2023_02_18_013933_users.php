@@ -19,7 +19,10 @@ return new class extends Migration
             $table->boolean('admin')->default(false);
             $table->timestamp('created_at');
             $table->timestamp('updated_at')->nullable();
-            $table->binary("profile_pic")->nullable()->default(null);
+            $table->string("profile_pic")->nullable()->default(null);
+            $table->bigInteger('cpf')->nullable();
+            $table->string('phone')->nullable();
+            $table->foreignId('address_id')->nullable();
             $table->boolean("first_login")->default(true);
 
         });

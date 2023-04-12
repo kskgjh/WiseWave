@@ -16,24 +16,11 @@ class ProductList extends Component
     public $msg;
     public int $currentPage;
 
-    protected $listeners = ['productCreated' => 'render',
-                             'delSelected'=> 'delSelected'];
-
-    public function delSelected(array $ids){
-        $this->msg = "deletando";
-        foreach($ids as $id){
-            productImg::where('product_id', $id)->delete();
-        }
-        Product::whereIn('id', $ids)->delete();
-        
-    }
-
     public function mount(){
         $this->variants = Variant::all();
         $this->dispatchBrowserEvent('current-page', ['page'=> 2]);
         
     }
-
     public function render()
     {
         $products = Product::with('productImgs')->paginate(20);

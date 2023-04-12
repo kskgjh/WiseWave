@@ -4,11 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\RegisterUserRequest;
-use Illuminate\Http\Request;
-use App\Models\User;
+
 
 class Controller extends BaseController
 {
@@ -16,6 +15,10 @@ class Controller extends BaseController
 
     public function index(){
         return view('index');
+    }
+
+    public function adminForm(){
+        return view('site.admin.adminRegister');
     }
 
     public function renderForm(){

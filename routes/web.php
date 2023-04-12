@@ -9,8 +9,9 @@ use App\Http\Controllers\userController;
 
 
 Route::prefix('/')->controller(Controller::class)->group(function (){
-    Route::get('/', 'index')->name('index');
     Route::get('/register', 'renderForm')->name('register.render');
+    Route::get('admin/register', 'adminForm')->name('admin.register');
+    Route::get('/', 'index')->name('index');
     Route::get('/logout', 'logout');
     Route::fallback('index');
 });
@@ -20,6 +21,8 @@ Route::prefix('/user')
     ->group(function (){
         Route::post('/login', 'authenticate')->name('user.auth');
         Route::post("/register", 'submit')->name('user.register');
+        Route::post('/register/admin', 'registerAdmin')->name('admin.register.submit');
+
 
 });
 
@@ -50,5 +53,5 @@ Route::prefix('/product')
         Route::get('/category', 'allCategories')->name('product.all.category');
 
         Route::get('/all', 'all')->name('product.all');
-        Route::get('/del/{id}', 'delete')->name('product.delete');
+        Route::delete('/del/{id}', 'delete')->name('product.delete');
 });

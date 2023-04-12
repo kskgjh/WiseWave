@@ -9,4 +9,8 @@ class adminController extends Controller
     public function index(){
         return view('site.admin.adminPanel');
     }
+
+    public function submit(Request $req){
+        dd($req);
+    }
 }

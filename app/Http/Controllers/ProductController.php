@@ -71,15 +71,17 @@ class ProductController extends Controller
     }
     }   
     public function delete(Request $req){
-        Product::destroy($req->id);
+        if(!$req->idArr){
+            Product::destroy($req->id);
 
-        $imgs = productImg::get()->where('product_id', $req->id);
+            $imgs = productImg::get()->where('product_id', $req->id);
 
-        foreach($imgs as $img) {
-            $img->delete();
-            Storage::delete("imgs/product/$img->name");
+            foreach($imgs as $img) {
+                $img->delete();
+                Storage::delete("imgs/product/$img->name");
+            }
+            return redirect()->to('http://localhost:8000/admin#products');
         }
-        return back();
     }
     public function getVariant(Request $req){
         return Variant::find($req->id);

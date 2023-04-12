@@ -4,7 +4,6 @@ namespace App\Models;
 
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 
@@ -14,13 +13,13 @@ class User extends Authenticatable
 
     
     protected $fillable = [
-        'email',
-        'password', 
-        'userName', 
-        'profile_pic',
-        'admin',
+        'email', 'password', 'userName', 'profile_pic', 'admin', 'phone', 'address_id', 'cpf'
     ];
 
     protected $protected = ['password'];
+
+    public function address(){
+        return $this->hasOne(Address::class);
+    }
 
 }

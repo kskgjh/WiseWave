@@ -93,6 +93,11 @@ export function productList() {
                     alert(err);
                 });
         },
+        handleDelForm(id){
+            let form = document.querySelector(`#delForm_${id}`)
+            console.log(form)
+            form.submit()
+        },
         productPage(id) {
             let index = this.products.findIndex((el, index, arr) => {
                 if (el.id == id) return true;
@@ -216,16 +221,23 @@ export function productList() {
         delSelected() {
             this.selected.forEach((id) => {
                 let index = this.products.findIndex((el, index, arr) => {
+                    console.log(el)
                     if (el.id == id) return true;
                 });
                 console.log("deleting index ", index, "id: ", id);
                 this.products.splice(index, 1);
+
+                axios.delete(`http://localhost:8000/product/del/${id}`)
+                        .then((result) => {
+                            console.log(result)
+                        }).catch((err) => {
+                            if(err.response.status !== 405) alert(err)
+                        });
+
             });
-            Livewire.emit("delSelected", this.selected);
-            this.selected = [];
-            this.somethingSelected = false;
-            this.$refs.checkAll.checked = false;
-            this.howManySelected = null;
+
+            location.reload()
+            
         },
         addDimensions(e) {
             let el = e.target;

@@ -26,7 +26,8 @@ class RegisterUserRequest extends FormRequest
             'email' => ['required', 'unique:users,email'],
             'userName' => ['required', 'regex:/[a-zA-z\s]+/', new FullName],
             'password' =>['required', 'min:8', 'confirmed'],
-            'password_confirmation' => 'required'
+            'password_confirmation' => 'required',
+            'cpf'=> ['required', 'unique:users,cpf']
         ];
     }
 

@@ -1,6 +1,6 @@
 
 
-<form action="{{route('user.auth')}}" method="POST" class="form-1">
+<form action="{{route('user.auth')}}" method="POST" class="loginForm">
     @csrf
     @error('email')
         <span>{{$message}}</span>
@@ -22,9 +22,8 @@
     autocomplete="password"
     name='password'
     id='password' />
-    <div>
-        <a href="{{route('register.render')}}">Cadastrar-se</a>
-    </div>
 
     <button class="btn-1">Enviar</button>
+    <a class="btn-link btn-2" href="{{route('register.render')}}">Cadastrar-se</a>
+
 </form>

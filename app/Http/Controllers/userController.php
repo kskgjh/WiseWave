@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\RegisterUserRequest;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Models\Address;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -29,20 +30,58 @@ class userController extends Controller
 
     }
 
+    public function registerAdmin(Request $req){
+        $req->validate([
+            'userName'=> 'required',
+            'password'=> 'required',
+            'email'=> 'required'
+        ]);
+
+        $user = new User([
+            'userName'=> $req->userName,
+            'password'=> bcrypt($req->password),
+            'email'=> $req->email,
+            'admin'=> true
+        ]);
+
+        if($user->save()) return $this->authenticate($req);
+
+        dd("ocorreu um problema");
+    }
+
     public function submit(RegisterUserRequest $req) {
-        $first = User::get();
-        if($first){
-            $admin = true;
-        } else{
-            $admin = false;
+        $address = Address::where('street', $req->street)->where('number',$req->number)->first();
+
+        if(!$address) {
+            $intCep = str_replace('-', '', $req->cep);
+
+            $newAddress = new Address([
+                'street'=> $req->street,
+                'number'=>$req->number,
+                'cep'=> $intCep,
+                'neighborhood'=> $req->neighborhood,
+                'complements'=> $req->complements?? '',
+                "city"=> $req->city,
+                'state'=> $req->state
+            ]);
+            $newAddress->save();
+
+            $addressId = $newAddress->id;
+        } else {
+            $addressId = $address->id;
         }
+
+        $intCpf = str_replace('-', '', str_replace('.','',$req->cpf));
 
         $res = User::create([
             'email'=> $req->email,
             'userName'=> $req->userName,
             'password'=> bcrypt($req->password),
-            'admin'=> $admin,
+            "cpf"=> $intCpf,
+            'phone'=> $req->phone,
+            'address_id'=> $addressId
         ]);
+
         if($res) return $this->authenticate($req);
 
         return back()->with('error', 'Não foi possivel cadastrar a conta. Tente novamente mais tarde.');

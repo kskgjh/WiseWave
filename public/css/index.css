@@ -25,6 +25,7 @@
 #carroussel .left,
 #carroussel .right {
     top: 0;
+    color: white;
     position: absolute;
     min-width: 200px;
     min-height: 400px;
