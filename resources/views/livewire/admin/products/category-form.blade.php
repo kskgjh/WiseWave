@@ -6,10 +6,10 @@
         x-data="{ type: 'parent' }">
         @csrf
         @if(session()->has('success'))
-            {{session('success')}}
+            <span style="color: white">{{session('success')}}</span>
         @endif
         @error('name')
-            {{$message}}
+            <span style="color: white">{{$message}}</span>
         @enderror
         <div>
             <input type="text" name="name" placeholder="Nome da categoria">

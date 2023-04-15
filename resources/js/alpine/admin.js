@@ -24,10 +24,6 @@ export function adminSelector() {
                 document.getElementById("products").classList.add("selected");
                 return;
             }
-
-            // let params = new URLSearchParams(window.location.search)
-
-            // if(params.get('page')) return this.current = 'Produtos'
         },
     };
 }
@@ -80,13 +76,15 @@ export function productList() {
             });
 
             let params = new URLSearchParams(window.location.search);
-            this.page = params.get("page");
+            this.page = params.get("page")? params.get("page"): 1;
             this.getProducts();
         },
         async getProducts() {
+            console.log('searching for products')
             await axios
-                .get(`http://localhost:8000/product/all/?page=${this.page}`)
+                .get(`http://localhost:8000/product/?page=${this.page}`)
                 .then((result) => {
+                    console.log(result)
                     this.products = result.data.data;
                 })
                 .catch((err) => {
@@ -99,6 +97,7 @@ export function productList() {
             form.submit()
         },
         productPage(id) {
+            console.log('rendering page of ', id)
             let index = this.products.findIndex((el, index, arr) => {
                 if (el.id == id) return true;
             });
@@ -184,7 +183,6 @@ export function productList() {
             this.howManySelected = this.selected.length;
         },
         isSelected(id) {
-            console.log(this.page);
             const checkbox = this.$refs[`check_${id}`];
             if (checkbox.checked) return this.productPage(id);
             checkbox.checked = true;
@@ -313,13 +311,18 @@ export function carrousselForm() {
         getPath(e) {
             if (e.target.files.length == 0) return;
             let file = e.target.files[0];
-            console.log(file);
+
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = (ev) => {
                 this.imagePath = ev.target.result;
             };
         },
+        resetForm(){
+            this.imagePath = null
+            this.$refs.input.value = ""
+            console.log()
+        }
     };
 }
 export function currentCarroussel() {
@@ -416,6 +419,85 @@ export function categorySelector() {
         resetCategory() {
             this.parent_id = null;
             this.selected = "Selecione a categoria";
+            let selected = document.querySelector('.categorySelected')
+            selected.classList.remove('categorySelected')
         },
     };
+}
+export function productForm(){
+    return { 
+        select: 'null', 
+        status: true,
+        value: null,
+        tryingToDel: null,
+        modal: false,
+        imgInputCount: 1,
+        images: [],
+        variants: [],
+        async getVariants(){
+            await axios.get("http://localhost:8000/variant")
+            .then((result) => {
+                this.variants = result.data    
+            }).catch((err) => {
+                alert(err);
+            });
+        },
+        toggleModal(){this.modal = !this.modal},
+        resetSelect(){this.select = 'null'},
+        init(){ this.getVariants() },
+        storeFile(e){
+            let file = e.files[0];
+            this.images.push(file)
+            this.readFile(file)
+        },
+        readFile(file){
+            let arrLength = this.images.length
+            let icon = document.querySelector(`#icon_${arrLength}`)
+            let img = document.querySelector(`#image_${arrLength}`)
+            let input = document.querySelector(`#input_${arrLength}`);
+            console.log(input)
+            
+            const reader = new FileReader;
+            reader.readAsDataURL(file)
+            reader.onload = e=> img.src = e.target.result;
+            
+            input.disabled = true
+
+            icon.classList.add("hidden")
+            img.classList.remove("hidden")
+            this.imgInputCount++
+
+            img.addEventListener("click", (e)=> {
+                e.stopImmediatePropagation();
+                this.removeConfirm(arrLength)
+
+            });
+        },
+        removeConfirm(index){
+            this.toggleModal()
+            this.tryingToDel = index
+        },
+        cancelDelete(){
+            this.tryingToDel = null,
+            this.toggleModal()
+        },
+        delImage(){
+            let index = this.tryingToDel - 1;
+            let label = document.querySelector(`#label_${this.tryingToDel}`)
+            label.remove();
+            this.images.splice(index, 1);
+            this.toggleModal()
+        },
+        submit(){
+            console.log('AQUI')
+            let arrLength = this.images.length
+            for(let x = 1; x <= arrLength; x++){
+                let input = document.querySelector(`#input_${x}`)
+                input.disabled = false                
+            }
+
+            this.$refs.form.submit()
+        }
+        
+    }
 }

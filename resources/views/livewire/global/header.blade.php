@@ -26,7 +26,7 @@
                  x-transition:leave-start.scale.100
                  x-transition:leave-end.scale.85
                  class="dropMenu">
-                        @livewire('login-form')
+                        @livewire('site.login-form')
                 </div>
         </div>
 

@@ -8,7 +8,7 @@
 
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="icon" href="{{ asset('assets/imgs/favicon.png') }}">
-    @livewire('fontawesome')
+    @livewire('global.fontawesome')
 
     @yield('links')
     @livewireStyles
@@ -16,7 +16,7 @@
 </head>
 
 <body>
-        @livewire('header')
+        @livewire('global.header')
     <main>
         @yield('main')
     </main>

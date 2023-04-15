@@ -7,6 +7,6 @@
 @section('title', 'Home - WiseWave')
 
 @section('main')
-    @livewire('carroussel')
+    @livewire('site.carroussel')
 @endsection
 

@@ -1,7 +1,7 @@
 <div class="main" x-data="adminSelector" @change-page.window="changePage($event)">
        
     <template x-if="current == 'Carrossel'">
-        <div>
+        <div class="carrousselAdminPanel">
             @livewire('admin.carroussel.carroussel-form')
             @livewire('admin.carroussel.current-carroussel')
         </div>

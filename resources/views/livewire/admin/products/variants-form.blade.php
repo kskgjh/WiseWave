@@ -1,12 +1,12 @@
 <div>
     <form 
-        action="{{route('product.add.variant', ['amount'=> $variants])}}" 
+        action="{{route('add.variant', ['amount'=> $variants])}}" 
         method="POST"
         class="productVariantForm" 
         >
         @csrf
         @if(session('sucess'))
-            <p>Variante criada com sucesso</p>
+            <p style="color: white">Variante criada com sucesso</p>
         @endif
         <div class="variantsHeader">
             @error('title')
@@ -56,9 +56,9 @@
             <i class="fa-solid fa-plus"></i>
         </button>
 
-        <div class="divBtns">
+        <div class="buttonsDiv">
             <button class="btn-1">Enviar</button>
-            <button class="btn-1">Cancelar</button>
+            <button class="btn-2">Cancelar</button>
         </div>
     </form>
 </div>

@@ -25,7 +25,7 @@
         </thead>
         <tbody>
         @foreach ($products as $product)
-        <tr @click="isSelected({{$product->id}})">
+        <tr id="row_{{$product->id}}" @click="isSelected({{$product->id}})">
             <th>
                 <input 
                     x-ref="check_{{$product->id}}" 
@@ -54,7 +54,7 @@
     </table>
     {{$products->links('vendor.pagination.default')}}
     @endif
-        <div x-show="modal" x-cloa>
+        <div x-show="modal" x-cloak>
             <form action="" class="productModal">
                 <div class="updateTitle">
                     <i class="closeButton fa-solid fa-arrow-left-long" @click="toggleModal"></i>
@@ -94,7 +94,7 @@
                             <select name="variant_id" x-model="currentVariant">
                                     <option value="null">Selecionar uma variante</option>
                                 @foreach ($variants as $variant)
-                                    <option value="variant_{{$variant_id}}">{{$variant->title}}</option>    
+                                    <option value="variant_{{$variant->id}}">{{$variant->title}}</option>    
                                 @endforeach
                             </select>   
                         </label>
@@ -113,7 +113,7 @@
 
                     <div class="buttonsDiv">
                         <button class="btn-1">Atualizar</button>
-                        <button type="button" class="btn-1" @click="window.location.reload()">Cancelar</button>
+                        <button type="button" class="btn-2" @click="window.location.reload()">Cancelar</button>
                     </div>
             </form>
             </div>

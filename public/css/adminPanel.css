@@ -96,6 +96,11 @@
 #sideBarMenu:has(li:not(.selected):hover) li:not(:hover) {
     opacity: 0.5;
 }
+.carrousselAdminPanel {
+    border: 2px solid white;
+    border-radius: 16px;
+    overflow: hidden;
+}
 .carrousselForm {
     background-color: var(--red);
     padding: 1em 2em;
@@ -141,6 +146,9 @@
     object-position: center;
     max-width: 700px;
     max-height: 300px;
+}
+.preview i {
+    color: white;
 }
 .currentCarroussel {
     background-color: var(--red);
@@ -193,15 +201,19 @@
 .productsForms {
     display: flex;
     align-items: center;
+    background-color: var(--red);
+    border-radius: 16px;
+    border: 2px solid white;
     gap: 1em;
 }
 .productsForms .rightSide {
-    display: flex;
+    display: grid;
     gap: 1em;
-    flex-flow: column nowrap;
+    border-left: 2px solid white;
 }
 .productForm {
     display: grid;
+    border-radius: 16px;
     grid-template-columns: 2fr 1fr;
     width: 60dvw;
     min-width: fit-content;
@@ -210,6 +222,9 @@
     padding: 1em 2em;
     background-color: var(--red);
     position: relative;
+}
+.productForm i {
+    color: white;
 }
 .productForm .category {
     width: 100%;
@@ -225,12 +240,16 @@
 }
 .productForm-inputs .amountDiv {
     display: grid;
+    color: white;
     grid-template-columns: 1fr 1fr;
 }
 .buttonsDiv {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    place-items: center;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    gap: 1rem;
+    width: 100%;
+    margin-top: 0.5rem;
 }
 
 .productForm-inputs div label{
@@ -303,11 +322,13 @@
     padding: 1em 2em;
     background-color: var(--red);
 }
+.productVariantForm i {
+    color: white;
+}
 .productVariantForm input, 
 .productVariantForm select, 
 .productVariantForm option {
     font-size: 1.5rem;
-    color: black;
 
 }
 .add-sub-div {
@@ -319,6 +340,7 @@
 	border: none;
 	cursor: pointer;
     padding: 0.3em 1em; 
+    color: white;
 }
 .colorLabel {
     font-size: 1.5rem;
@@ -362,7 +384,9 @@
     grid-template-columns: 1fr 1fr;
     gap: 0.5em;
     align-items: center;
-
+}
+.selectDiv select {
+    color: black !important;
 }
 .selectDiv div:is(#parentMainMenu){
     width: 100%;
@@ -371,13 +395,29 @@
 }
 .productList{
     width: 100%;
-    border: 3px solid black;
-    background-color: var(--red);
+}
+.pagination {
+    width: 100%;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+
+}
+.pagination li:not(.current-page){
+    
+}
+.pagination li.current-page {
+    color: gray
+
+}
+.productList thead{
+    background-color: var(--secondary-color);
 }
 .productList tbody tr:hover{
     background-color: var(--light-red);
 }
 .productList tbody {
+    background-color: var(--red);
     cursor: pointer;
 }
 .productList tr, 
@@ -508,6 +548,8 @@
 }
 #productTable{
     width: 70%;
+    color: white;
+    border: 2px solid;
     margin-inline: auto;
     margin-top: 3rem;
 }
@@ -534,6 +576,8 @@
 .categoryForm {
     background-color: var(--red);    
     padding: 1em;
+    height: 100%;
+    border-top: 2px solid white;
     display: flex;
     flex-flow: column nowrap;
     gap: 0.7em;
@@ -552,6 +596,7 @@
 }
 .categoryDropMenu {
     position: relative;
+    color: black !important;
     font-size: 1.5rem;
     user-select: none;
 }

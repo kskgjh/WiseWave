@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\Global;
 
 use Livewire\Component;
 
@@ -8,6 +8,6 @@ class Fontawesome extends Component
 {
     public function render()
     {
-        return view('livewire.fontawesome');
+        return view('livewire.global.fontawesome');
     }
 }

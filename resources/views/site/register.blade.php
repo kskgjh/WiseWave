@@ -15,9 +15,9 @@
     @enderror
     
 
-    @livewire('register-user-form')
+    @livewire('site.register-user-form')
 
-    @livewire('register-address-form')
+    @livewire('site.register-address-form')
     
 
 

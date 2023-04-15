@@ -18,7 +18,6 @@ class ProductList extends Component
 
     public function mount(){
         $this->variants = Variant::all();
-        $this->dispatchBrowserEvent('current-page', ['page'=> 2]);
         
     }
     public function render()

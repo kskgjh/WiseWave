@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Storage;
 class bannerImgController extends Controller
 {
     public function save(bannerImgRequest $req){
+        $previous = url()->previous();
+        $backUrl = "$previous#carrossel";
+        
         $image = new bannerImage();
         $image->title = $req->title;
         $image->alt = $req->alt;
@@ -23,14 +26,17 @@ class bannerImgController extends Controller
 
         $image->save();
 
-        return back()->with('message', 'A imagem foi enviada com sucesso');
+        return redirect()->to($backUrl)->with('message', 'A imagem foi enviada com sucesso');
 
     }
     public function delete(Request $req){
+        $previous = url()->previous();
+        $backUrl = "$previous#carrossel";
+
         $image = bannerImage::find($req->id);
         Storage::delete("assets/imgs/carroussel/$image->path");
         $image->delete();
-        return back();
+        return redirect()->to($backUrl);
     }
     public function all(){
         return bannerImage::all()->toJson();

@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
 use Illuminate\Support\Facades\Storage;
-use App\Models\variantOptions;
-use Illuminate\Http\Response;
+use App\Http\Requests\ProductRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use App\Models\productImg;
 use App\Models\Product;
 use App\Models\Variant;
@@ -17,59 +16,7 @@ class ProductController extends Controller
     public function all(){
         return Product::with('productImgs')->paginate(20);
     }
-    public function addVariant(Request $req){
-
-        $optionsAmount = $req->amount;
-
-        $variantRules = [
-            'title'=> ['required','unique:variants,title'],
-        ];
-        $errors = [
-            'title.required'=> 'Por favor insira um nome para a variante.',
-            'title.unique'=> "Esta variante ja existe."
-        ];
-
-        $req->validate($variantRules, $errors);
-
-        $variant = new Variant([
-            'title'=> $req->title
-        ]);
-
-
-        $variant->save();
-
-        if($req->type == 1){
-            for($i = 1; $i<=$optionsAmount; $i++){
-                $attr = "variantOption$i";
-
-                $option = new variantOptions([
-                    'option'=> $req->$attr,
-                    'variant_id'=> $variant->id
-                ]);
-
-                $option->save();
-        }
-            
-            return back()->with('sucess', true);
-        }
-
-        if($req->type == 2){
-            for($i = 1; $i<=$optionsAmount; $i++){
-                $name = "colorName$i";
-                $color = "variantColor$i";
-
-                $option = new variantOptions([
-                    'option'=> $req->$name,
-                    'color'=> $req->$color,
-                    'variant_id'=> $variant->id
-                ]);
-
-                $option->save();
-
-        }
-        return back()->with('sucess', true);
-    }
-    }   
+    
     public function delete(Request $req){
         if(!$req->idArr){
             Product::destroy($req->id);
@@ -83,35 +30,42 @@ class ProductController extends Controller
             return redirect()->to('http://localhost:8000/admin#products');
         }
     }
-    public function getVariant(Request $req){
-        return Variant::find($req->id);
-    }
-    public function addCategory(Request $req){
-        $previous = url()->previous();
-        $backUrl = "$previous#products";
 
-        $rules = [
-            'name'=> ['unique:categories,name', 'required']
-        ];
-        $messages = [
-            'name.required'=> 'Por favor insira o nome a categoria.',
-            'name.unique'=> 'Esta categoria ja existe.'
-        ];
+    public function addProduct(ProductRequest $req){
+        if($req->variant !== 'null'){
+            $variant = Variant::where('title', $req->variant)->first()->id;
+        } 
+        else {
+            $variant = null;
+        }
 
-        $req->validate($rules, $messages);
+        $status = $req->status == 'on'? true : false;
 
-
-        $category = new Category([
+        $product = new Product([
             'name'=> $req->name,
-            'type'=> $req->type
+            'status'=> $status,
+            'text'=> $req->text,
+            'amount'=> $req->amount,
+            'variants_id'=> $variant
         ]);
 
-        if($req->type == 'child') $category->parent_id = $req->parent_id;
+        $product->save();
 
-        $category->save();
-        return redirect()->to($backUrl)->with('success', 'Categoria salva com sucesso.');
+        $imagesReq = $req->images;
+
+        foreach($imagesReq as $image){
+            $imgDone = new productImg;
+            $imageName = uniqid().Carbon::now()->timestamp. '.' .$image->extension();
+            $imgDone->name = $imageName;
+            $imgDone->product_id = $product->id;
+            $image->storeAs('imgs/product', $imageName);
+            $imgDone->save();
+        }
+
+        return redirect()
+                    ->to('/admin#products')
+                    ->with('productCreated', "Produto cadastrado com sucesso!");
     }
-    public function allCategories(){
-        return Category::with('children')->get();
-    }
+
+
 }

@@ -1,128 +1,109 @@
-<div x-data="{ select: 'null', resetSelect(){this.select = 'null'} }">
-<form 
-    method="POST" 
-    class="productForm" 
-    enctype="multipart/form-data"
-    wire:submit.prevent="submit"
-    >
-    @csrf
+<div x-data="productForm" x-init="$watch('images', e=> console.log(e))">
+    <form 
+        method="POST" 
+        class="productForm" 
+        action="{{route('product.add')}}"
+        enctype="multipart/form-data"
+        x-ref="form"
+        @submit.prevent="submit">
 
-    <div class="productForm-inputs">
-        @if (session('productCreated'))
-            <h3> {{session('productCreated')}} </h3>
-        @endif
-        @error('name')
-            {{$message}}
-        @enderror
-        <input 
-            type="text" 
-            name="productName" 
-            placeholder="Nome do produto"
-            wire:model.lazy="name"/>
-
-        @error('value')
-            {{$message}}
-        @enderror
-        <input 
-            type="text"
-            class="money"
-            placeholder="Preço (R$)" 
-            name="productValue"
-            wire:model="value"/>
-
-        <textarea 
-            wire:model="text" 
-            cols="15" 
-            rows="6" 
-            placeholder="Descrição do item"></textarea>
-        <div class="amountDiv">
-            <label>Quantidade em estoque:  
-                <input 
-                    type="number" 
-                    value="0"
-                    name="amount"
-                    wire:model="amount" />
-            </label>
-            <label>Ativo
-                @if($status)
-                <i class="fa-regular fa-square-check"></i>
-                @else
-                <i class="fa-regular fa-square"></i>
-                @endif
-                <input 
-                    id="checkbox"
-                    type="checkbox"
-                    name="status"
-                    wire:model="status"
-                    class="hidden"
-                    checked>
-            </label>
-        </div>
-
-        <div class="selectDiv">
-            <div>
-            <select wire:model="variant" x-model="select">
-                <option value="null" disabled selected>Selecionar uma variação</option>
-                @foreach ($variants as $variant)
-                    <option value="{{$variant->id}}">{{$variant->title}}</option>
-                @endforeach
-            </select>
-            <i class="fa-solid fa-rotate-left" x-on:click="resetSelect()"></i>
-            </div>
-            @livewire('admin.products.category-selector')
-        </div>
-
-        <div class="buttonsDiv">
-            <button type="submit" class="btn-1">Enviar</button>
-            <button type="button" class="btn-1" wire:click="standart">Cancelar</button>
-        </div>
-    </div>
-
-
-    <div class="productImages">
-
-        @error('images')    
-        <h2>{{$message}}</h2>
-        @enderror
-
-        @for ($a = 0; $a<$inputCount; $a++)
-        <label class="imgsLabel">
-            @isset($images[$a]) 
-                <span 
-                    class="imgTopIndex" 
-                    wire:click="modal('deleteImg', {{$a}})" >
-                    <img src="{{$images[$a]->temporaryUrl()}}" alt="">
-            </span>
-            @endisset
-
-            @if(!isset($images[$a]))
-                <i class="fa-solid fa-image"></i>
+        @csrf
+        <div class="productForm-inputs">
+            @if (session('productCreated'))
+                <span style="color: white"> {{session('productCreated')}} </span>
             @endif
+            @error('name')
+                {{$message}}
+            @enderror
             <input 
-                @isset($images[$a])
-                    disabled
-                @endisset
-                name="files[]"
-                type="file" 
-                class="hidden" 
-                wire:model="images" >
-        </label>
-            
-        @endfor
+                type="text" 
+                name="name" 
+                placeholder="Nome do produto"/>
+            @error('value')
+                {{$message}}
+            @enderror
 
+            <input 
+                type="text" class="money"
+                placeholder="Preço (R$)" 
+                name="value"
+                x-model="value" x-mask:dynamic="$money($input, ',', '.')"/>
+            <textarea 
+                name="text" cols="15" 
+                rows="6" placeholder="Descrição do item"></textarea>
+            <div class="amountDiv">
+                <label>Quantidade em estoque:  
+                    <input 
+                        type="number" value="0"
+                        name="amount" />
+                </label>
+                <label>Ativo
+                    <i class="fa-regular" :class="status? 'fa-square-check' : 'fa-square'"></i>
+                    <input 
+                        id="checkbox"
+                        type="checkbox"
+                        name="status"
+                        x-model="status"
+                        class="hidden"
+                        checked>
+                </label>
+            </div>
 
-    </div>
+            <div class="selectDiv">
+                <div>
+                <select name="variant" x-model="select">
+                    <option value="null" disabled selected>
+                        Selecionar uma variação
+                    </option>
+                    <template x-if="variants.length > 0">
+                        <template x-for="variant in variants">
+                            <option x-value="variant.id" x-text="variant.title"></option>
+                        </template>
+                    </template>
 
-</form>
-<div id="modal" @if(!$modal) class="hidden" @endif>
-    <div class="" id="modalContent">
-        @if(!empty($message))
-        <h2>{{$message}}</h2>
-        @endif
-        <div>
-            <button class="btn-1" wire:click="closeModal">Cancelar</button>
-            <button class="btn-1" wire:click="deleteImg({{$imgIndex}})">Confirmar</button>
+                </select>
+                <i class="fa-solid fa-rotate-left" x-on:click="resetSelect()"></i>
+                </div>
+                @livewire('admin.products.category-selector')
+            </div>
+
+            <div class="buttonsDiv" >
+                <button type="submit" class="btn-1">Enviar</button>
+                <button type="button" class="btn-2">Cancelar</button>
+            </div>
         </div>
-    </div>
-</div>
+
+
+        <div class="productImages">
+
+            @error('images')    
+            <h2>{{$message}}</h2>
+            @enderror
+
+            <template x-for="i in imgInputCount">
+                <label class="imgsLabel" :id="`label_${i}`">
+                    <img :id="`image_${i}`" class="zindex10 hidden" alt="">
+                    <i class="fa-solid fa-image" :id="`icon_${i}`"></i>
+                    <input    
+                        name="images[]"
+                        type="file" 
+                        class="hidden" 
+                        :id="`input_${i}`"
+                        @change="storeFile($event.target)">
+                    </label>
+            </template>
+
+        </div>
+
+        <div id="modal" x-show="modal">
+            <div id="modalContent">
+                <h2>Tem certeza que deseja excluir essa imagem?</h2>
+                <div class="buttonsDiv">
+                    <button class="btn-1" type="button" @click="delImage">Confirmar</button>
+                    <button class="btn-2" type="button" @click="cancelDelete">Cancelar</button>
+                </div>
+            </div>
+        </div>
+
+    </form>
 </div>

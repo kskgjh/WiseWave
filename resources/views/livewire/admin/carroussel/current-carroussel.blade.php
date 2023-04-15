@@ -10,7 +10,7 @@
                 <input type="hidden" name="id" :value="currentId">
                     <div class="buttonsDiv">
                         <button class='btn-1'>Confirmar</button>
-                        <button class='btn-1' type="button">Cancelar</button>
+                        <button class='btn-2' @click="toggleModal" type="button">Cancelar</button>
                     </div>
             </form>
 
@@ -27,7 +27,7 @@
         </template>
 
         <template x-if="images.length == 0">
-            <span>Nenhuma imagem cadastrada!</span>
+            <span style="color: white">Nenhuma imagem cadastrada!</span>
         </template>
 
         <template x-if="images.length > 0">

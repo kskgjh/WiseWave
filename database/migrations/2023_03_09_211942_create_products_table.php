@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('text')->nullable();
             $table->integer('amount');
             $table->integer('sales')->default(0);
-            $table->foreignId('variants_id')->nullable();
+            $table->foreignId('variant_id')->nullable();
         });
     }
 

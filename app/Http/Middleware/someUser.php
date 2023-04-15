@@ -2,11 +2,12 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class adminAccess
+class someUser
 {
     /**
      * Handle an incoming request.
@@ -15,11 +16,10 @@ class adminAccess
      */
     public function handle(Request $request, Closure $next): Response
     {
-
-        if (auth()->check() && auth()->user()->admin){
-        return $next($request);
-        }
-
+        $someUser = User::get()->first();
+        
+        if(!$someUser) return $next($request);
+        
         return redirect()->route('index');
     }
 }
