@@ -2,33 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\VariantRegisterRequest;
 use App\Models\Variant;
 use App\Models\variantOptions;
 use Illuminate\Http\Request;
 
 class variantController extends Controller
 {
-    public function allVariants(){
+    public function all(){
         return Variant::with('variantOptions')->get();
     }
 
-    public function getVariant(Request $req){
-        return Variant::find($req->id)->with('variantOptions');
+    public function find(Request $req){
+        return Variant::with('variantOptions')->find($req->id);
     }
 
-    public function addVariant(Request $req){
-
+    public function add(VariantRegisterRequest $req){
         $optionsAmount = $req->amount;
-
-        $variantRules = [
-            'title'=> ['required','unique:variants,title'],
-        ];
-        $errors = [
-            'title.required'=> 'Por favor insira um nome para a variante.',
-            'title.unique'=> "Esta variante ja existe."
-        ];
-
-        $req->validate($variantRules, $errors);
 
         $variant = new Variant([
             'title'=> $req->title
@@ -56,8 +46,8 @@ class variantController extends Controller
 
         if($req->type == 2){
             for($i = 1; $i<=$optionsAmount; $i++){
-                $name = "colorName$i";
-                $color = "variantColor$i";
+                $name = "colorName_$i";
+                $color = "variantColor_$i";
 
                 $option = new variantOptions([
                     'option'=> $req->$name,
@@ -68,7 +58,6 @@ class variantController extends Controller
                 $option->save();
 
         }
-        return back()->with('sucess', true);
-    }
-    }   
+        return redirect()->to('/admin#products')->with('sucess', true);
+    }}   
 }

@@ -7,6 +7,9 @@
 @section('title', 'Home - WiseWave')
 
 @section('main')
-    @livewire('site.carroussel')
+
+    @component('components.site.carrossel')@endcomponent
+    @component('components.site.most-saled-products')@endcomponent
+
 @endsection
 

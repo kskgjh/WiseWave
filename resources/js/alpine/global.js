@@ -70,3 +70,52 @@ export function registerForm(){
 
 }
 }
+export function carrossel(){
+    return{
+        images: [],
+        current: 0,
+        interval: null,
+        init(){
+            this.getImages();
+            this.startInterval();
+        },
+        async getImages(){
+            await axios.get('/banner')
+                .then((result) => {
+                    console.log('get images result: ', result.data)
+                    this.images = result.data;
+                }).catch((err) => {
+                    alert(err);
+                });
+        },
+        startInterval(){
+            this.interval = setInterval(() => {
+                this.changeImg(1)
+            }, 3500);
+        },
+        stopInterval(){
+            clearInterval(this.interval)
+        },
+        changeImg(direction){
+            if(this.current + direction < 0) return this.current = this.images.length - 1 
+            if(this.current + direction == this.images.length) return this.current = 0 
+
+            this.current += direction
+        }
+    }
+}
+export function mostSalesProducts(){
+    return{
+        products: [],
+        detectUrl: new RegExp("^https://"),
+        init(){ this.getProducts() },
+        async getProducts(){
+            await axios.get('/product/sales')
+                .then((result) => {
+                    this.products = result.data.data
+                }).catch((err) => {
+                    alert(err)
+                });
+        }
+    };
+}

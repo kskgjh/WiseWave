@@ -1,5 +1,5 @@
 #carroussel {
-    min-width: 100vw;
+    max-width: 100vw;
     height: 400px;
     background-color: var(--dark-red);
     display: grid;
@@ -13,7 +13,7 @@
     display: grid;
     place-items: center;
 }
-#carroussel img{
+#carroussel img {
     object-fit: scale-down;
     object-position: center;
     max-height: 400px;
@@ -44,4 +44,65 @@
 }
 #carroussel .right:hover > i {
     opacity: 1;
+}
+.mostSales {
+    display: flex;
+    flex-flow: column nowrap;
+    background-color: var(--red);
+    gap: 1em;
+    height: 550px;
+
+    margin-top: 2rem;
+    padding: 2rem;
+}
+.mostSales > h2 {
+    font-size: 1.8rem;
+    color: white;
+}
+.mostSales > div {
+    overflow-x: scroll;
+    display: flex;
+    padding: 1em;
+    gap: 1em;
+    flex-flow: row nowrap;
+}
+.productCard {
+    display: grid;
+    grid-template-rows: 2fr 1fr;
+    color: white;
+    border-radius: 16px;
+    background-color: var(--light-red);
+    max-width: calc(100% / 4);
+    padding: 1rem;
+}
+
+.productCard > img {
+    border-radius: 16px;
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+    object-position: center;
+}
+.productCard .productInfos {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+}
+.productInfos > span {
+    width: 100%;
+    text-align: center;
+    font-size: 2rem;
+}
+.productInfos div {
+    display: flex;
+    justify-content: space-between;
+    flex-flow: row nowrap;
+    font-size: 1rem;
+}
+.amount0 {
+    font-size: 1.5rem;
+    top: 0;
+    right: 0;
+    background-color: var(--secondary-color);
 }

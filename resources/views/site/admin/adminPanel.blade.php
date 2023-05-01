@@ -7,5 +7,5 @@
 @section('title', 'Admin - WiseWave')
 
 @section('main')
-    @livewire('admin.selector')
+    @component('components.admin.selector', ['products'=> $products])@endcomponent
 @endsection

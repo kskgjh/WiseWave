@@ -31,11 +31,13 @@ Route::prefix('/user')
 
 Route::prefix('/banner')
     ->controller(bannerImgController::class)
-    ->middleware('admin')
     ->group(function(){
-        Route::post('/', 'save')->name('banner.save');
         Route::get('/', 'all')->name('banner.all');
-        Route::delete('/del', 'delete')->name('banner.delete');
+})  
+    ->middleware('admin')
+    ->group(function (){
+        Route::post('/', 'save')->name('banner.save');
+        Route::delete('/del/{id}', 'delete')->name('banner.delete');
 });
 
 Route::prefix('/admin')
@@ -47,24 +49,40 @@ Route::prefix('/admin')
 
 Route::prefix('/product')
     ->controller(ProductController::class)
-    ->middleware('admin')
     ->group(function (){
-        Route::post('/', 'addProduct')->name('product.add');
-        Route::get('/', 'all')->name('product.all');
+        Route::get('/page/{id}', 'render')->name('product.render');
+        Route::get('/{order?}', 'all')->name('product.all');
+        Route::get('/find/{id}', 'find')->name('product.find');
+
+})
+    ->middleware('admin')
+    ->group(function(){
         Route::delete('/del/{id}', 'delete')->name('product.delete');
+        Route::put('/update', 'update')->name('product.update');
+        Route::delete('/vol/del/{id}', 'deleteVol')->name('vol.delete');
+        Route::post('/', 'add')->name('product.add');
 });
 
 Route::prefix('/variant')
     ->controller(variantController::class)
     ->group(function(){
-        Route::post('/{amount}', 'addVariant')->name('add.variant');
-        Route::get('/{id}', 'getVariant')->name('get.variant');
-        Route::get('/', 'allVariants')->name('all.variant');
-} );
+        Route::get('/', 'all')->name('all.variant');
+        Route::get('/{id}', 'find')->name('find.variant');
+
+})  
+    ->middleware('admin')
+    ->group(function(){    
+        Route::post('/{amount}', 'add')->name('add.variant');
+
+});
 
 Route::prefix('/category')
     ->controller(categoryController::class)
     ->group(function(){
-        Route::post('/', 'addCategory')->name('product.add.category');
-        Route::get('/', 'allCategories')->name('category.all');
-});
+        Route::get('/', 'all')->name('category.all');
+        Route::get('/{id}', 'find')->name('category.find');
+})
+    ->middleware('admin')
+    ->group(function(){
+        Route::post('/', 'add')->name('category.add');
+    });

@@ -1,10 +1,9 @@
+import { sleep } from "../functions";
+
 export function adminSelector() {
     return {
         current: "Resumos",
-        changePage(event) {
-            console.log(event);
-            this.current = event.detail;
-        },
+        changePage(event) { this.current = event.detail; },
         init() {
             let url = window.location.href;
             let params = new URLSearchParams(new URL(url).search);
@@ -30,13 +29,10 @@ export function adminSelector() {
 export function adminSideBar() {
     return {
         hidden: false,
-        toggleSideBar() {
-            this.hidden = !this.hidden;
-        },
+        toggleSideBar() { this.hidden = !this.hidden; },
         toggleSelected(target) {
             let listEl = document.querySelector("#sideBarMenu");
-            let list = listEl.children;
-            let arr = Array.from(list);
+            let arr = document.querySelectorAll(".selected");
 
             if (target == listEl) return;
 
@@ -44,7 +40,6 @@ export function adminSideBar() {
                 if (element.classList.contains("selected"))
                     element.classList.remove("selected");
             });
-
             target.classList.add("selected");
             let event = new CustomEvent("change-page", {
                 detail: target.innerText,
@@ -53,58 +48,33 @@ export function adminSideBar() {
         },
     };
 }
-export function productList() {
+export function productPage(){
     return {
-        products: [],
-        somethingSelected: false,
-        howManySelected: null,
-        modal: false,
-        selected: [],
         volumes: 0,
-        page: null,
-
-        currentVariant: null,
         currentImg: null,
         currentStatus: null,
-        toggleModal() {
-            this.modal = !this.modal;
-            this.scrollLock();
-        },
-        init() {
-            document.addEventListener("keyup", (e) => {
-                if (e.key == "Escape" && this.modal) this.toggleModal();
-            });
+        variant_id: null,
+        currentVariant: null,
+        productId: null,
+        variants: null,
+        volDelForm: false,
+        volIdToDel: null,
+        init(){ this.getVariants()},
+        async getVariants(){
+            await axios.get('/variant')
+            .then((result) => {
+                this.variants = result.data;    
 
-            let params = new URLSearchParams(window.location.search);
-            this.page = params.get("page")? params.get("page"): 1;
-            this.getProducts();
-        },
-        async getProducts() {
-            console.log('searching for products')
-            await axios
-                .get(`http://localhost:8000/product/?page=${this.page}`)
-                .then((result) => {
-                    console.log(result)
-                    this.products = result.data.data;
-                })
-                .catch((err) => {
-                    alert(err);
-                });
-        },
-        handleDelForm(id){
-            let form = document.querySelector(`#delForm_${id}`)
-            console.log(form)
-            form.submit()
-        },
-        productPage(id) {
-            console.log('rendering page of ', id)
-            let index = this.products.findIndex((el, index, arr) => {
-                if (el.id == id) return true;
+            }).catch((err) => {
+               alert(err) 
             });
+        },
+        volDelModalToggle(){ this.volDelForm = !this.volDelForm},
+        productPage(e) {
+            console.log("rendering-page...")
+
+            let product = e.detail.product
             let detectUrl = new RegExp("^https://");
-            console.log(detectUrl);
-            let product = this.products[index];
-            console.log(product);
             let productImages = product.product_imgs;
             let imageDiv = this.$refs.images;
 
@@ -114,26 +84,19 @@ export function productList() {
                 this.currentImg = `assets/imgs/product/${productImages[0].name}`;
             }
 
-            this.$refs.productName.innerText = product.name;
+            this.$refs.productName.value = product.name;
             this.$refs.amount.value = product.amount;
             this.$refs.text.value = product.text;
+            this.$refs.sales.innerText = product.sales;
+            this.$refs.price.value = product.price
+            this.productId = product.id;
 
             if (product.status == true) {
                 this.currentStatus = true;
             }
 
-            if (product.variants_id) {
-                axios
-                    .get(
-                        `http://localhost:8000/product/variant/${product.variants_id}`
-                    )
-                    .then((result) => {
-                        this.currentVariant = `variant_${result.data.id}`;
-                    })
-                    .catch((err) => {
-                        this.$refs.variant_label.innerHTML =
-                            "Ocorreu um problema com a variação do produto, tente novamente mais tarde.";
-                    });
+            if (product.variant_id) {
+                this.getCurrentVariant(product.variant_id);
             } else {
                 this.currentVariant = "null";
             }
@@ -146,13 +109,274 @@ export function productList() {
                 } else {
                     image.src = `assets/imgs/product/${element.name}`;
                 }
-                let span = document.createElement("span");
-                span.appendChild(image);
 
-                imageDiv.appendChild(span);
+                imageDiv.appendChild(image);
             });
+            this.$dispatch('category-select', {'category_id': product.category_id,
+                                                'context': 'product_page'});
+
+            if(product.volumes.length > 0){
+                this.renderDimensions(product.volumes)
+            }
             this.toggleModal();
         },
+        renderDimensions(volumes){
+            let div = this.$refs.dimTable;
+            div.innerHTML = ""
+            
+            let thead = document.createElement('thead')
+            thead.innerHTML = `
+            <tr>
+                <th>UN</th>
+                <th>Largura</th>
+                <th>Comprimento</th>
+                <th>Altura</th>
+                <th>Peso (Kg)</th>
+                <th>Excluir</th>
+            </tr>
+            `;
+            
+            let trashCan = document.createElement('i')
+            trashCan.classList.add('fa-solid')
+            trashCan.classList.add('fa-trash')
+            
+            let tbody = document.createElement('tbody')
+
+            volumes.forEach((el)=>{
+                let tr = document.createElement('tr')
+                let amount = document.createElement('th')
+                amount.innerText = el.amount
+
+                let width = document.createElement('th')
+                width.innerText = el.width
+
+                let height = document.createElement('th')
+                height.innerText = el.height
+
+                let length = document.createElement('th')
+                length.innerText = el.length
+
+                let weight = document.createElement('th')
+                weight.innerText = el.weight
+
+                let trash = trashCan
+                trash.addEventListener('click', e=> {
+                    this.volIdToDel = el.id
+                    this.$refs.volDelForm.action = `/product/vol/del/${el.id}`;
+
+                    this.volDelModalToggle();
+                })
+
+                let delTh = document.createElement('th')
+                delTh.appendChild(trash)
+
+                tr.appendChild(amount)
+                tr.appendChild(width)
+                tr.appendChild(length)
+                tr.appendChild(height)
+                tr.appendChild(weight)
+                tr.appendChild(delTh)
+                tbody.appendChild(tr)
+
+            })
+
+            let table = document.createElement('table')
+            table.classList.add('dimTable')
+            table.appendChild(thead);
+            table.appendChild(tbody);
+
+            div.appendChild(table)
+
+        },
+        async getCurrentVariant(id){
+            console.log(`finding title of ${id} variant`)
+
+            if(!this.variants) await sleep(500);
+
+            console.log('product page variants: ', this.variants)
+
+            let variant = this.variants.find((el)=> {
+                return el.id == id? el: false;
+            })
+
+            this.currentVariant = variant.title
+        },
+        removeVol(vol){
+            vol.remove()
+            let volumes = document.querySelectorAll('.volume')
+            let arr = Array.from(volumes)
+            arr.forEach((el, index)=>{
+                let span = el.querySelector('span')
+                span.innerText = `Volume ${index + 1} (em cm): `
+
+                let inputs = el.querySelectorAll('input')
+                let inputArr = Array.from(inputs)
+                inputArr.forEach((el)=>{
+                    let id = el.id
+                    let currentNumber = id.slice(-2)
+                    let type = id.replace(currentNumber, '')
+
+                    el.name = `${type}_${index}`
+                    el.id = `${type}_${index}`
+
+                })
+            })
+            this.volumes = arr.length
+            
+        },
+        addDimensions(e) {
+            let el = e.target;
+            let elParent = el.parentElement;
+
+            if (el.classList.contains("fa-plus")) {
+                el.remove();
+                let trashCan = document.createElement("i");
+                trashCan.classList.add("fa-solid");
+                trashCan.classList.add("fa-trash");
+                elParent.appendChild(trashCan);
+                trashCan.addEventListener("click", (e) =>
+                    this.removeVol(e.target.parentElement)
+                );
+            } else {
+                el.remove();
+            }
+
+            let div = document.querySelector("#dimensions");
+            console.log(div);
+
+            let span = document.createElement("span");
+            span.innerText = `Volume ${this.volumes + 1} (em cm): `;
+
+            let amount = document.createElement('input')
+            amount.type = 'number'
+            amount.name = `amount_${this.volumes}`
+            amount.id = `amount_${this.volumes}`
+
+            let height = document.createElement("input");
+            height.type = "number";
+            height.name = `height_${this.volumes}`;
+            height.id = `height_${this.volumes}`;
+
+
+            let width = document.createElement("input");
+            width.type = "number";
+            width.name = `width_${this.volumes}`;
+            width.id = `width_${this.volumes}`;
+
+
+            let length = document.createElement("input");
+            length.type = "number";
+            length.name = `length_${this.volumes}`;
+            length.id = `length_${this.volumes}`;
+
+            let weight = document.createElement('input')
+            weight.type = 'text';
+            weight.name = `weight_${this.volumes}`;
+            weight.id = `weight_${this.volumes}`;
+
+            let labelAmount = document.createElement('label')
+            let labelHeight = document.createElement("label");
+            let labelWidth = document.createElement("label");
+            let labelLength = document.createElement("label");
+            let labelWeight = document.createElement('label')
+
+            labelAmount.innerText = "Quantidade: "
+            labelAmount.appendChild(amount);
+
+            labelHeight.innerText = "Altura: ";
+            labelHeight.appendChild(height);
+
+            labelWidth.innerText = "Largura: ";
+            labelWidth.appendChild(width);
+
+            labelLength.innerText = "Comprimento: ";
+            labelLength.appendChild(length);
+
+            labelWeight.innerText = "Peso: ";
+            labelWeight.appendChild(weight);
+
+            let addVolume = document.createElement("i");
+            addVolume.classList.add("fa-solid");
+            addVolume.classList.add("fa-plus");
+
+            let volume = document.createElement("div");
+            volume.appendChild(span);
+            volume.appendChild(labelAmount);
+            volume.appendChild(labelHeight);
+            volume.appendChild(labelWidth);
+            volume.appendChild(labelLength);
+            volume.appendChild(labelWeight);
+            volume.appendChild(addVolume);
+            volume.classList.add("volume");
+
+            div.appendChild(volume);
+
+            this.volumes++;
+
+            addVolume.addEventListener("click", (e) => this.addDimensions(e));
+        },
+        handleSubmit(){
+            let index = this.variants.findIndex((el)=>{
+                return el.title == this.currentVariant?true:false;
+            });
+            let variant_id = this.variants[index].id;
+            this.variant_id = variant_id;
+
+            setTimeout(() => {
+                this.$refs.form.submit()
+            }, 300);
+        }
+
+    }
+}
+export function productList() {
+    return {
+        modal: false,
+        products: null,
+        somethingSelected: false,
+        howManySelected: null,
+        selected: [],
+        page: null,
+        toggleModal(){ 
+            
+            this.modal = !this.modal 
+            this.scrollLock()
+        },
+        async init() {
+            document.addEventListener("keyup", (e) => {
+                if (e.key == "Escape" && this.modal) this.toggleModal();
+            });
+
+
+            let params = new URLSearchParams(window.location.search);
+
+            this.page = params.get("page")? params.get("page"): 1;
+            await this.getProducts();
+
+            if(params.get('product')){
+                let index = this.getIndexById(params.get('product'));
+                let product = this.products[index];
+                console.log(product)
+                
+                this.$dispatch('render-page', {'product': product});
+            } 
+        },
+        async getProducts() {
+            await axios
+                .get(`http://localhost:8000/product/?page=${this.page}`)
+                .then((result) => {
+                    this.products = result.data.data;
+                })
+                .catch((err) => {
+                    alert(err);
+                });
+        },
+        handleDelForm(id){
+            let form = document.querySelector(`#delForm_${id}`)
+            console.log(form)
+            form.submit()
+        },
+        
         scrollLock() {
             let body = document.querySelector("body");
             if (body.classList.contains("scrollLock")) {
@@ -182,9 +406,17 @@ export function productList() {
                 : (this.somethingSelected = true);
             this.howManySelected = this.selected.length;
         },
-        isSelected(id) {
+        async isSelected(id) {
+            if(!this.products) await sleep(500);
+
             const checkbox = this.$refs[`check_${id}`];
-            if (checkbox.checked) return this.productPage(id);
+
+            if (checkbox.checked) {
+
+                let index = this.getIndexById(id)
+                let product = this.products[index]
+                return this.$dispatch('render-page', {"product": product})
+            }
             checkbox.checked = true;
             this.select(id);
         },
@@ -216,12 +448,18 @@ export function productList() {
             }
             this.howManySelected = this.selected.length;
         },
+        getIndexById(id){
+
+            console.log('get by id:')
+            console.log(id)
+            let index = this.products.findIndex((el, index, arr) => {
+                if (el.id == id) return true;
+            });
+            return index
+        },
         delSelected() {
             this.selected.forEach((id) => {
-                let index = this.products.findIndex((el, index, arr) => {
-                    console.log(el)
-                    if (el.id == id) return true;
-                });
+                let index = this.getIndexById(id)
                 console.log("deleting index ", index, "id: ", id);
                 this.products.splice(index, 1);
 
@@ -237,72 +475,7 @@ export function productList() {
             location.reload()
             
         },
-        addDimensions(e) {
-            let el = e.target;
-            let elParent = el.parentElement;
 
-            if (el.classList.contains("fa-plus")) {
-                el.remove();
-                let trashCan = document.createElement("i");
-                trashCan.classList.add("fa-solid");
-                trashCan.classList.add("fa-trash");
-                elParent.appendChild(trashCan);
-                trashCan.addEventListener("click", (e) =>
-                    e.target.parentElement.remove()
-                );
-            } else {
-                el.remove();
-            }
-
-            let div = document.getElementById("dimensions");
-            console.log(div);
-
-            let span = document.createElement("span");
-            span.innerText = `Volume ${this.volumes + 1}(em cm): `;
-
-            let height = document.createElement("input");
-            height.type = "number";
-            height.name = `height_${this.volumes}`;
-
-            let width = document.createElement("input");
-            width.type = "number";
-            width.name = `width_${this.volumes}`;
-
-            let length = document.createElement("input");
-            length.type = "number";
-            length.name = `length_${this.volumes}`;
-
-            let labelHeight = document.createElement("label");
-            let labelWidth = document.createElement("label");
-            let labelLength = document.createElement("label");
-
-            labelHeight.innerText = "Altura: ";
-            labelHeight.appendChild(height);
-
-            labelWidth.innerText = "Largura: ";
-            labelWidth.appendChild(width);
-
-            labelLength.innerText = "Comprimento: ";
-            labelLength.appendChild(length);
-
-            let addVolume = document.createElement("i");
-            addVolume.classList.add("fa-solid");
-            addVolume.classList.add("fa-plus");
-
-            let volume = document.createElement("div");
-            volume.appendChild(span);
-            volume.appendChild(labelHeight);
-            volume.appendChild(labelWidth);
-            volume.appendChild(labelLength);
-            volume.appendChild(addVolume);
-            volume.classList.add("volume");
-
-            div.appendChild(volume);
-
-            this.volumes++;
-
-            addVolume.addEventListener("click", (e) => this.addDimensions(e));
-        },
     };
 }
 export function carrousselForm() {
@@ -329,6 +502,7 @@ export function currentCarroussel() {
     return {
         currentTitle: null,
         currentAlt: null,
+        deleteAction: null,
         currentImg: null,
         currentId: null,
         modal: false,
@@ -345,13 +519,14 @@ export function currentCarroussel() {
             await axios
                 .get("http://localhost:8000/banner")
                 .then((result) => {
-                    console.log(result);
                     if (!result.data[0]) return;
                     this.images = result.data;
                     this.currentImg = `assets/imgs/carroussel/${result.data[0].path}`;
-                    this.currentId = result.data[0].id;
-                    this.currentTitle = result.data[0].title;
-                    this.currentAlt = result.data[0].alt;
+                    this.currentId = this.images[0].id;
+                    this.currentTitle = this.images[0].title;
+                    this.currentAlt = this.images[0].alt;
+                    this.deleteAction = `/banner/del/${this.images[0].id}`
+
                 })
                 .catch((err) => {
                     console.log(err);
@@ -360,8 +535,10 @@ export function currentCarroussel() {
                     );
                 });
         },
-        changeImg(path, id) {
+        changeImg(path, id, title) {
+            this.currentTitle = title;
             this.currentId = id;
+            this.deleteAction = `/banner/del/${id}`
             this.currentImg = `assets/imgs/carroussel/${path}`;
         },
         deleteImg() {
@@ -372,49 +549,109 @@ export function currentCarroussel() {
 export function categorySelector() {
     return {
         selected: "Selecione a categoria",
-        parent_id: null,
-        menu: false,
-        toggleMenu(e) {
-            console.log(e);
-            this.menu = !this.menu;
-            console.log(this.menu);
+        context: null,
+        categories: null,
+        showing: null,
+        category_id: null,
+        menu: null,
+        init(){ 
+            this.getCategories();
+            this.getContext();
+            this.menu = `#category_menu_${this.context}`;
         },
-        toggleSubMenu(id, target = false) {
-            let menu = this.$refs[`menu_${id}`];
-
-            if (!target) {
-                target = menu.parentElement.children[0].children[0];
+        getContext(){
+            let elId = this.$el.id
+            this.context = elId.replace('category_selector_', '');
+        },
+        toggleMenu(){ 
+            let menu = this.$refs[`category_menu_${this.context}`]
+            if(!menu.classList.contains('hidden')){
+                if(this.showing){
+                    let subMenu = document.querySelector(`#menu_${this.context}_${this.showing}`);
+                    this.toggleIcon(this.showing)
+                    subMenu.classList.add("hidden");
+                }
+                return menu.classList.add('hidden')
             }
-            if (target) {
-                if (target.classList.contains("fa-chevron-down")) {
-                    target.classList.add("fa-chevron-up");
-                    target.classList.remove("fa-chevron-down");
+
+            menu.classList.remove('hidden')
+        },
+        async getCategories(){
+            console.log('getting categories')
+            await axios.get('/category')
+                .then((result) => {
+                    this.categories = result.data
+                }).catch((err) => {
+                    alert(err)
+                });
+        },
+        toggleIcon(id){
+            console.log('toggle icon of ', id)
+            let icon = document.querySelector(`#menuIcon_${this.context}_${id}`)
+
+            if (icon) {
+                if (icon.classList.contains("fa-chevron-right")) {
+                    icon.classList.add("fa-chevron-left");
+                    icon.classList.remove("fa-chevron-right");
                 } else {
-                    target.classList.remove("fa-chevron-up");
-                    target.classList.add("fa-chevron-down");
+                    icon.classList.remove("fa-chevron-left");
+                    icon.classList.add("fa-chevron-right");
                 }
             }
+        },
+        toggleSubMenu(id) {
+            console.log('toggling menu from id: ', id)
+
+            if(this.showing && this.showing !== id){
+                this.toggleIcon(this.showing)
+                let subMenu = document.getElementById(`menu_${this.context}_${this.showing}`)
+                subMenu.classList.add('hidden')
+                this.showing = null
+            }
+
+            let menu = document.querySelector(`#menu_${this.context}_${id}`)
+            this.toggleIcon(id)
+
 
             if (menu.classList.contains("hidden")) {
+                this.showing = id
                 return menu.classList.remove("hidden");
             }
             menu.classList.add("hidden");
+            this.showing = null
         },
-        select(id, el, option) {
-            let dropMenu = document.querySelector("#parentMainMenu");
-            let alredySelected = dropMenu.querySelectorAll(".categorySelected");
-            if (alredySelected) {
-                alredySelected.forEach((element) => {
-                    element.classList.remove("categorySelected");
-                });
-                setTimeout(() => {
-                    this.menu = false;
-                }, 300);
+       async handleEvent(e){
+            let id = e.detail.category_id;
+            let context = e.detail.context
+
+            if(this.context !== context) return;
+            if(!this.categories) await sleep(1000);
+
+            console.log(`selecting category ${id} in ${context}`)
+
+            let el = document.querySelector(`#category_${context}_${id}`);
+            let option = el.querySelector('span').innerText
+
+            this.select(id, option, true)
+
+        },
+        select(id, option, event = false) {
+            let alredySelected = document.querySelector(".categorySelected");
+            if(alredySelected){
+                alredySelected.classList.remove('categorySelected')
             }
 
-            this.parent_id = id;
+            this.category_id = id;
             this.selected = option;
-            el.classList.add("categorySelected");
+
+            let label = document.querySelector(`#category_${this.context}_${id}`)
+            label.classList.add("categorySelected");
+
+            if(event) return;
+
+            setTimeout(() => {
+                this.toggleMenu();
+            }, 300);
         },
         resetCategory() {
             this.parent_id = null;
@@ -488,16 +725,120 @@ export function productForm(){
             this.images.splice(index, 1);
             this.toggleModal()
         },
-        submit(){
-            console.log('AQUI')
+        async submit(){
             let arrLength = this.images.length
             for(let x = 1; x <= arrLength; x++){
                 let input = document.querySelector(`#input_${x}`)
                 input.disabled = false                
             }
+            console.log(this.value)
+            let moneyOptions = {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+            };
 
+            let money;
+            if(this.value.match('.')) money = this.value.replaceAll('.', '')
+
+            money = parseFloat(money);
+
+            this.value = money.toLocaleString('pt-br', moneyOptions)
+
+            await sleep(200);
             this.$refs.form.submit()
         }
         
+    }
+}
+export function variantForm(){
+    return {
+        variantAmount: 1,
+        type: 1,
+        optionsDiv: document.querySelector('#variantOptionList'),
+        init(){
+            this.textOptionsInit();
+            this.$watch('type', (value)=>{ value == 1? this.textOptionsInit() : this.colorOptionsInit() });
+        },
+        submit(){
+            let form = document.querySelector('.productVariantForm');
+            form.action = `/variant/${this.variantAmount}`;
+            form.submit();
+        },
+        colorOptionsInit(){
+            this.variantAmount = 1;
+            let option = document.createElement('div')
+            option.innerHTML = `
+            <label class="colorLabel">
+                <input 
+                    type="text" 
+                    name="colorName_1"
+                    placeholder="Cor 1">
+                <input 
+                    type="color"
+                    name="variantColor_1" /> 
+            </label>     `
+            this.optionsDiv.innerHTML = "";
+            this.optionsDiv.appendChild(option)
+        },
+        textOptionsInit(){
+            this.variantAmount = 1;
+            let option = document.createElement('div')
+            option.innerHTML = `
+            <input 
+                type="text" 
+                name="variantOption_1" 
+                placeholder="Opção 1" />`;
+            this.optionsDiv.innerHTML = "";
+            this.optionsDiv.appendChild(option);
+        },
+        addTextOption(){ 
+            this.variantAmount++;
+            let newOption = document.createElement('div');
+            newOption.classList.add('variantOptions')
+            newOption.innerHTML = `<input 
+                                        type="text" 
+                                        name="variantOption_${this.variantAmount}" 
+                                        placeholder="Opção ${this.variantAmount}" />
+                                    <i class="fa-solid fa-trash trash" @click="deleteOption($event.target)"></i>`;
+            console.log(newOption);
+            this.optionsDiv.append(newOption)
+        },
+        addColorOption(){
+            this.variantAmount++;
+            let newOption = document.createElement('div');
+            newOption.classList.add('variantOptions')
+            newOption.innerHTML = `<label class="colorLabel">
+                                        <input 
+                                            type="text" 
+                                            name="colorName_${this.variantAmount}"
+                                            placeholder="Cor ${this.variantAmount}">
+                                        <input 
+                                            type="color"
+                                            name="variantColor_${this.variantAmount}" /> 
+                                            <i class="fa-solid fa-trash trash" @click="deleteOption($event.target)"></i>
+                                    </label>`;
+            console.log(newOption);
+            this.optionsDiv.append(newOption)
+
+        },
+        deleteOption(target){ 
+            target.parentElement.remove()
+            this.variantAmount--;
+         }
+    }
+}
+export function categoryForm(){
+    return { 
+        type: 'parent',
+        categories: null,
+        init(){ this.getCategories() },
+        async getCategories(){
+            await axios.get('/category')
+                .then((result) => {
+                    this.categories = result.data
+                }).catch((err) => {
+                    alert(err)
+                });
+        }, 
     }
 }

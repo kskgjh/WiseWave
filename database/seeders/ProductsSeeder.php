@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Product;
 use App\Models\productImg;
+use App\Models\Variant;
 use Illuminate\Database\Seeder;
 
 class ProductsSeeder extends Seeder
@@ -14,7 +15,7 @@ class ProductsSeeder extends Seeder
     public function run(): void
     {
         Product::factory(40)
-            ->has(productImg::factory())
+            ->has(productImg::factory(4))
             ->create();
     }
 }

@@ -8,15 +8,15 @@
 
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="icon" href="{{ asset('assets/imgs/favicon.png') }}">
-    @livewire('global.fontawesome')
+    @component('components.global.fontawesome')@endcomponent
 
     @yield('links')
-    @livewireStyles
+
     <title>@yield('title')</title>
 </head>
 
 <body>
-        @livewire('global.header')
+        @component('components.global.header')@endcomponent
     <main>
         @yield('main')
     </main>
@@ -26,7 +26,7 @@
     </footer>
 
     @vite('resources/js/app.js')
-    @livewireScripts
+
 </body>
 
 </html>

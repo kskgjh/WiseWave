@@ -1,0 +1,50 @@
+.categoryDropMenu {
+    position: relative;
+    padding: 0;
+    margin: 0;
+    max-height: 100%;
+    user-select: none;
+}
+.categoryReset::before {
+    position: absolute;
+    font-size: 1.5rem;
+    color: white;
+    top: 1rem;
+    cursor: pointer;
+    right: -2.5rem;
+}
+.categoryDropMenu label{
+    display: grid;
+    grid-template-columns: 1fr 2rem;
+    padding: 0.3em 0.7em;
+    background-color: whitesmoke;
+    justify-content: space-between;
+    align-items: center;
+}
+.categoryDropMenu span {
+    width: 100%;
+}
+.categoryDropMenu i {
+    display: block !important;
+}
+.categoryDropMenu label:hover{
+    background-color: lightgray;
+}
+.categoryDropMenu h3 {
+    color: black;
+    margin-right: auto;
+}
+.categoryDropMenu :is(label) i::before{
+    margin-left: auto;
+    font-size: 1.3rem;
+    color: black !important;
+}
+.categorySelected {
+    background-color: gray !important;
+}
+.categoryMenu{
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+}

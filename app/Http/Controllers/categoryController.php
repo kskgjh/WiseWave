@@ -7,11 +7,15 @@ use Illuminate\Http\Request;
 
 class categoryController extends Controller
 {
-    public function allCategories(){
+    public function all(){
         return Category::with('children')->get();
     }
 
-    public function addCategory(Request $req){
+    public function find(Request $req){
+        return Category::with('children')->find($req->id);
+    }
+
+    public function add(Request $req){
         $previous = url()->previous();
         $backUrl = "$previous#products";
 

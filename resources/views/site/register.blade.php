@@ -3,7 +3,6 @@
 @section('title', "Cadastro")
 
 @section('main')
-
 <form 
     action='{{route('user.register')}}' 
     method="POST" 
@@ -15,17 +14,13 @@
     @enderror
     
 
-    @livewire('site.register-user-form')
+    @component('components.site.register-user-form')@endcomponent
 
-    @livewire('site.register-address-form')
+    @component('components.site.register-address-form')@endcomponent
     
-
-
     <div class="rowDiv">
         <button type='submit' class="btn-1">Cadastrar</button>
-        <a href="{{url()->previous()}}" class="btn-2 btn-link">Voltar</a>
+        <a href="{{route('index')}}" class="btn-2 btn-link">Voltar</a>
     </div>
-
 </form>
-
 @endsection

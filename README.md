@@ -1,2 +1,2 @@
 # WiseWave
- E-commerce with Laravel, Livewire and Alpine.js
+ E-commerce with Laravel and Alpine.js

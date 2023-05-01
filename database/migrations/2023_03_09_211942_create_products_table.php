@@ -20,6 +20,8 @@ return new class extends Migration
             $table->integer('amount');
             $table->integer('sales')->default(0);
             $table->foreignId('variant_id')->nullable();
+            $table->foreignId('category_id')->nullable();
+            $table->string('price');
         });
     }
 

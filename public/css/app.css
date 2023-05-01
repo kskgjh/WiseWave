@@ -1,14 +1,21 @@
-@import url('https://fonts.googleapis.com/css2?family=Lilita+One&family=Secular+One&family=Source+Sans+Pro:wght@300&family=Source+Serif+Pro:wght@300&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Lilita+One&family=Secular+One&family=Source+Sans+Pro:wght@300&family=Source+Serif+Pro:wght@300&display=swap");
 
-[x-cloak] { display: none !important; }
+[x-cloak] {
+    display: none !important;
+}
 
-*, *::after, *::before {
+*,
+*::after,
+*::before {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
 }
 *:focus {
     outline: 5px solid var(--secondary-color);
+}
+body{
+    overflow-x: hidden;
 }
 
 :root {
@@ -17,24 +24,39 @@
     --red: #a30006;
     --light-red: #c21a01;
     --secondary-color: #ed254e;
-    --FF-source-sans: 'Source Sans Pro', sans-serif;
-    --FF-secular-one: 'Secular One', sans-serif;
-    --FF-lilita-one: 'Lilita One', cursive;
-    --gradient-1: linear-gradient(to right top, #cc542c, #c44924, #bd3d1d, #b53016, #ad210f, #a01516, #93091a, #85001d, #6b0023, #4f0524, #33081e, #1c0113);
-
-}
-.light-red {
-    background-color: var(--light-red) !important;
+    --FF-source-sans: "Source Sans Pro", sans-serif;
+    --FF-secular-one: "Secular One", sans-serif;
+    --FF-lilita-one: "Lilita One", cursive;
+    --gradient-1: linear-gradient(
+        to right top,
+        #cc542c,
+        #c44924,
+        #bd3d1d,
+        #b53016,
+        #ad210f,
+        #a01516,
+        #93091a,
+        #85001d,
+        #6b0023,
+        #4f0524,
+        #33081e,
+        #1c0113
+    );
 }
 body {
     background-color: var(--bg-color);
 }
-
-.scrollLock{
+.border {
+    border: 2px solid;
+}
+.scrollLock {
     overflow-y: hidden !important;
 }
-.relative{
+.relative {
     position: relative;
+}
+.absolute {
+    position: absolute;
 }
 #header {
     display: grid;
@@ -51,8 +73,7 @@ body {
     font-size: 1.7rem;
     padding: 0.3em 1em;
     position: sticky;
-    box-shadow: 0px 4px var(--light-red),
-    0px 6px 5px var(--light-red)
+    box-shadow: 0px 4px var(--light-red), 0px 6px 5px var(--light-red);
 }
 #header .right {
     min-width: 100%;
@@ -74,24 +95,23 @@ body {
     position: relative;
     z-index: 1;
 }
-.zindex10{
+.zindex10 {
     z-index: 10;
 }
-.pagination{
+.pagination {
     display: flex;
     gap: 0.5em;
     user-select: none;
     background-color: var(--light-red);
-    border:2px solid black;
+    border: 2px solid black;
     color: white;
     list-style: none;
     width: fit-content;
     margin-inline: auto;
     font-size: 2rem;
-
 }
 .current-page span {
-    color: gray !important
+    color: gray !important;
 }
 .pagination a {
     padding: 0.3em 0.3em;
@@ -105,7 +125,6 @@ body {
     place-items: center;
     width: fit-content;
     position: relative;
-
 }
 .checkbox {
     position: absolute;
@@ -115,7 +134,7 @@ body {
 .hidden {
     display: none !important;
 }
-.btn-1{
+.btn-1 {
     padding: 0.2em 1em;
     user-select: none;
     width: fit-content;
@@ -126,10 +145,8 @@ body {
     border: 2px solid white;
     background-color: var(--secondary-color);
     font-family: var(--FF-lilita-one);
-    text-shadow: 1px 1px 0px black,
-    -1px -1px 0px black,
-    1px -1px 0px black,
-    -1px 1px 0px black;
+    text-shadow: 1px 1px 0px black, -1px -1px 0px black, 1px -1px 0px black,
+        -1px 1px 0px black;
 }
 .btn-2 {
     padding: 0.2em 1em;
@@ -139,10 +156,8 @@ body {
     font-size: 1.5rem;
     border-radius: 16px;
     border: 2px solid white;
-    text-shadow: 1px 1px 0px black,
-                -1px -1px 0px black,
-                1px -1px 0px black,
-                -1px 1px 0px black;
+    text-shadow: 1px 1px 0px black, -1px -1px 0px black, 1px -1px 0px black,
+        -1px 1px 0px black;
     color: white;
     background-color: transparent;
     font-family: var(--FF-lilita-one);
@@ -154,14 +169,14 @@ body {
 .btn-1:hover,
 .btn-2:hover {
     box-shadow: 0px 0px 8px 1px white;
-                
 }
 .rowDiv {
     display: flex;
+    max-width: 100%;
     flex-flow: row nowrap;
     align-items: center;
     justify-content: center;
-    gap: 1.5rem
+    gap: 1.5rem;
 }
 .hoverEffect-1::before {
     background-image: var(--gradient-1);
@@ -181,7 +196,6 @@ body {
 
 .hoverEffect-1:hover::before {
     transform: scaleX(1);
-
 }
 .alignContentCenterScreen {
     min-width: 100%;
@@ -192,7 +206,7 @@ body {
 .cursor-pointer {
     cursor: pointer;
 }
-.registerForm{
+.registerForm {
     border-radius: 16px;
     min-width: fit-content;
     width: 60vw;
@@ -241,7 +255,7 @@ body {
     font-size: 1.3rem;
     color: black !important;
 }
-.userInputs input{
+.userInputs input {
     border: none;
 }
 .adressInputs select,
@@ -250,11 +264,11 @@ body {
 .adressInputs option {
     width: 100%;
     color: black;
-    border:none;
+    border: none;
     padding: 0.3rem 0.8rem;
     font-size: 1.6rem;
 }
-.userInputs input, 
+.userInputs input,
 .adressInputs input {
     border-radius: 16px;
 }
@@ -295,7 +309,7 @@ body {
 
 .invalidField {
     outline: 3px solid var(--secondary-color);
-    outline-offset: 2px ;
+    outline-offset: 2px;
 }
 
 #modal {
@@ -320,7 +334,6 @@ body {
     height: fit-content;
     z-index: 11;
     padding: 1em 2em;
-
 }
 #modalContent div:has(button) {
     margin-inline: auto;
@@ -342,12 +355,11 @@ body {
     width: fit-content;
     right: 100%;
 }
-.flex-column{
+.flex-column {
     display: flex;
     flex-flow: column nowrap;
     gap: 0.5em;
 }
-
 
 @keyframes spinning {
     0% {
@@ -356,4 +368,4 @@ body {
     100% {
         transform: rotate(360deg);
     }
-    }
+}

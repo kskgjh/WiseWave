@@ -20,6 +20,6 @@ class someUser
         
         if(!$someUser) return $next($request);
         
-        return redirect()->route('index');
+        return redirect()->route('register.render');
     }
 }
