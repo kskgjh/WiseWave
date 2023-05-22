@@ -8,9 +8,7 @@
     position: relative;
     gap: 1rem;
 }
-.hideSideBar{
-    transform: translateX(100%);
-}
+
 .adminForm {
     margin-inline: auto;
     margin-top: 10rem;
@@ -31,71 +29,7 @@
     border-radius: 16px;
     padding: 0.3rem 1rem
 }
-#menuBtn {
-    cursor: pointer;
 
-}
-#sideBarMenu {
-    padding: 1em 2em;
-    background-color: var(--dark-red);
-    right: 0;
-    z-index: 1;
-    top: 3.5rem;
-    min-height: calc(100dvh - 3.5rem);
-    place-self: end;
-    display: flex;
-    gap: 1.5em;
-    position: fixed;
-    flex-flow: column nowrap;
-    align-items: center;
-    transition: transform 500ms ease-out;
-}
-.sideBarHide{
-    transform: translateX(100%);
-}
-#sideBarMenu h1 {
-    font-size: 4rem;
-}
-#sideBarMenu  {
-    list-style: none;
-    display: flex;
-    flex-flow: column nowrap;
-    gap: 1em;
-}
-#sideBarMenu a:hover {
-    text-decoration: none !important;
-}
-.selected {
-    background-color: var(--light-red);
-}
-#sideBarMenu:first-child {
-    margin-bottom: 2rem;
-}
-#sideBarMenu a {
-    display: block;
-    user-select: none;
-    padding: 0.3em 0.5em;
-    font-size: 2rem;
-    cursor: pointer;
-    transition-delay:   box-shadow 300ms, 
-                        background 100ms;
-    transition: background 200ms ease, 
-                box-shadow 300ms ease-out,
-                transform 200ms ease-out,
-                opacity 300ms ease;
-}
-#sideBarMenu li:not(.selected):hover {
-    background-color: var(--light-red);
-    box-shadow: 5px 6px gray;
-    transform: translate(-5px, -6px);
-}
-#sideBarMenu li:active {
-    box-shadow: none;
-    transform: translate(0px, 0px);
-}
-#sideBarMenu:has(li:not(.selected):hover) li:not(:hover) {
-    opacity: 0.5;
-}
 .carrousselAdminPanel {
     border: 2px solid white;
     border-radius: 16px;
@@ -263,7 +197,7 @@
 }
 .buttonsDiv {
     display: flex;
-    flex-flow: row nowrap;
+    flex-flow: row nowrap !important;
     justify-content: center;
     gap: 1rem;
     width: 100%;
@@ -389,18 +323,26 @@
 }
 .productList{
     width: 100%;
-}
-.pagination {
-    width: 100%;
+}.pagination {
     display: flex;
     flex-flow: row nowrap;
     justify-content: center;
+    gap: 1em;
+    font-size: 2rem;
+    list-style: none;
+    border: 2px solid transparent;
+    background-color: var(--red);
+}
+.pagination a:visited{
+    color: white;
 
 }
-.pagination li.current-page {
-    color: gray
-
+.pagination a {
+    padding: 0.3em 0.3em;
+    color: white;
+    text-decoration: none;
 }
+
 .productList thead{
     background-color: var(--secondary-color);
 }
@@ -411,10 +353,10 @@
     background-color: var(--red);
     cursor: pointer;
 }
-.productList tr, 
+
 .productList th{
     user-select: none;
-    border: 2px solid black;
+    border: 3px solid transparent;
     padding: 0.4em 1em;
     font-size: 2rem;
 }
@@ -431,7 +373,7 @@
 }
 .productModal {
     overflow-y: auto;
-    padding-top: 3rem;
+    padding: 3rem 0;
     position: fixed;
     background-color: var(--light-red);
     max-height: calc(100vh - 3.5rem);
@@ -526,8 +468,7 @@
     grid-template-columns: 1fr 1fr;
     place-items: center;
     padding: 0.6em 0;
-    border: 3px double black;
-    border-bottom: transparent;
+    border: 2px double transparent;
     background-color: var(--red);
 }
 .delForm{
@@ -690,13 +631,134 @@
 .dimTable{
     margin-inline: auto;
 }
-.dimTable tbody,
-.dimTable thead {
+.dimTable th{
     background-color: var(--red);
-    border: 2px solid white;
+
 }
-.dimTable tbody th,
-.dimTable thead th {
+.features{
+    display: flex;
+    min-width: 100%;
+    align-items: center;
+    gap: 1em;
+    flex-flow: column nowrap;
+}
+.featuresForm{
+    width: 40%;
+    color: white;
+    align-items: center;
+    gap: 1em;
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+.featuresForm > div {
+    width: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    padding: 0.5em 1em;
+    border: 1px solid white;
+    border-radius: 16px;
+    background-color: var(--light-red);
+    
+}
+.featuresForm select,
+.featuresForm option {
+    margin-top: 0.5em;
+    font-size: 2rem;
+    width: fit-content;
+    padding: 0 1em;
+}
+.text {
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 0.5em;
+
+}
+.text input{
+    font-size: 2rem;
+    width: 80%;
+    text-align: center;
+}
+.text textarea{
     font-size: 1.5rem;
-    padding: 0.4em 0.7em;
+    width: 80%;
+
+}
+.itemsFeature{
+    gap: 1em
+}
+.itemsFeature > input {
+    font-size: 2rem;
+    text-align: center;
+    width: 80%;
+}
+.itemsFeature > div{
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 1em;
+}
+.item {
+    font-size: 2rem;
+    min-width: 100%;
+    display: flex;
+    gap: 0.4em;
+    position: relative;
+    flex-flow: row nowrap;
+}
+
+.item i::before{
+    position: absolute;
+    right: -1em;
+}
+.item input {
+    font-size: 1.5rem;
+    background-color: transparent;
+    border:none;
+    min-width: 80%;
+    transition: all 300ms ease;
+    color: white;
+}
+.item input:hover{
+    background-color: var(--red);
+}
+.item input:focus {
+    color: black;
+    background-color: lightgray;
+}
+.productFeature {
+    display: flex;
+    width: 40%;
+    border-radius: 16px;
+    background-color: var(--light-red);
+    padding: 0.5em 1em;
+    color: white;
+    border: 1px solid white;
+}
+.productFeature{
+    display: flex;
+    flex-flow: column nowrap;
+    font-size: 1.5rem;
+    gap: 1em;
+    text-align: center;
+}
+.productFeature > div{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    place-items: center;
+    gap: 1em;
+}
+.productFeature select,
+.productFeature option{
+    font-size: 1.5rem;
+    padding: 0 0.6em;
+    color: black;
+}
+.productFeature label{
+    display: flex;
+    color: white;
+    flex-flow: column nowrap;
+    width: 100%;
+    justify-content: center;
+    gap: 0.5em;
 }

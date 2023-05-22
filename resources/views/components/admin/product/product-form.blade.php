@@ -58,7 +58,7 @@
                     </option>
                     <template x-if="variants.length > 0">
                         <template x-for="variant in variants">
-                            <option x-value="variant.id" x-text="variant.title"></option>
+                            <option :value="variant.id" x-text="variant.title"></option>
                         </template>
                     </template>
                 </select>

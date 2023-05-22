@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\adminController;
 use App\Http\Controllers\bannerImgController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\categoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\FeatureController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\userController;
 use App\Http\Controllers\variantController;
@@ -13,20 +15,23 @@ use Illuminate\Http\Request;
 
 Route::prefix('/')->controller(Controller::class)->group(function (){
     Route::get('/register', 'renderForm')->name('register.render');
-    Route::middleware(someUser::class)
+    Route::middleware('someUser')
             ->get('admin/register', 'adminForm')
             ->name('admin.register');
+    Route::get('/login', 'login')->name('login.render');
     Route::get('/', 'index')->name('index');
     Route::get('/logout', 'logout');
+    Route::get('/access-denied', 'accessDenied')->name('access.denied');
     Route::fallback('index');
 });
 
 Route::prefix('/user')
     ->controller(userController::class)
     ->group(function (){
+        Route::get('/{id}', 'find');
         Route::post('/login', 'authenticate')->name('user.auth');
         Route::post("/register", 'submit')->name('user.register');
-        Route::middleware(someUser::class)->post('/register/admin', 'registerAdmin')->name('admin.register.submit');
+        Route::middleware('someUser')->post('/register/admin', 'registerAdmin')->name('admin.register.submit');
 });
 
 Route::prefix('/banner')
@@ -50,7 +55,9 @@ Route::prefix('/admin')
 Route::prefix('/product')
     ->controller(ProductController::class)
     ->group(function (){
-        Route::get('/page/{id}', 'render')->name('product.render');
+        Route::get('/search', 'search')->name('product.search');
+        Route::post('/search', 'search')->name('product.search');
+        Route::get('/render/{id}', 'render')->name('product.render');
         Route::get('/{order?}', 'all')->name('product.all');
         Route::get('/find/{id}', 'find')->name('product.find');
 
@@ -85,4 +92,25 @@ Route::prefix('/category')
     ->middleware('admin')
     ->group(function(){
         Route::post('/', 'add')->name('category.add');
-    });
+});
+
+Route::prefix('/feature')
+    ->controller(FeatureController::class)
+    ->group(function(){
+        Route::get('/', 'all')->name('feature.all');    
+})  
+    ->middleware('admin')
+    ->group(function(){
+        Route::post('/add-to-product', 'addFeatureToProduct')->name('feature.add.product');
+        Route::post('/{amount?}', 'add')->name('feature.add');
+        
+});
+
+Route::prefix('/cart')
+    ->middleware('auth')
+    ->controller(CartController::class)
+    ->group(function(){
+        Route::get('/', 'render')->name('cart.render');
+        Route::post('/', 'add')->name('cart.add');
+        Route::delete('/delete-item', 'deleteItem')->name('cart.item.delete');
+});

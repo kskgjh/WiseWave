@@ -16,8 +16,9 @@ class categoryController extends Controller
     }
 
     public function add(Request $req){
-        $previous = url()->previous();
-        $backUrl = "$previous#products";
+        dd($req);
+
+        $backUrl = "/admin#products";
 
         $rules = [
             'name'=> ['unique:categories,name', 'required']

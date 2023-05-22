@@ -19,7 +19,7 @@
             <option value="null" disabled selected>Selecione a categoria pai</option>
             <template x-if="categories">
                 <template x-for="category in categories">
-                    <option x-value="category.id" x-text="category.name"></option>
+                    <option :value="category.id" x-text="category.name"></option>
                 </template>
             </template>
         </select>

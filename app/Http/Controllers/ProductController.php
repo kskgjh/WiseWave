@@ -4,28 +4,36 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\ProductRequest;
+use App\Models\Category;
+use App\Models\Feature;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Models\productImg;
 use App\Models\Product;
-use App\Models\Variant;
 use App\Models\variantOptions;
 use App\Models\Volume;
+use Illuminate\Support\Fluent;
+use Ramsey\Uuid\Type\Decimal;
 
 class ProductController extends Controller
 {
 
     public function render(Request $req){
-        $product = Product::with('productImgs')
-                            ->with('variants')
-                            ->with('category')
-                            ->find($req->id);
+        $product = $this->find($req);
+        $featureList = [];
+        
         if($product->variant_id) {
         $variantOptions = variantOptions::where('variant_id', $product->variant_id) 
                                         ->get();
         }
+        if($product->features){
+            foreach($product->features as $feature){
+                $featureList[] = Feature::with('items')->find($feature->feature_id);
+            }
+        }
         return view('site.productPage', ['product'=> $product, 
-                                        'variantOptions'=> $variantOptions]);
+                                        'variantOptions'=> $variantOptions,
+                                        'features'=> $featureList]);
     }
 
     public function getPage($previous){
@@ -54,6 +62,7 @@ class ProductController extends Controller
                             ->with('variants')
                             ->with('category')
                             ->with('volumes')
+                            ->with('features')
                             ->find($req->id);
         return $product;
     }
@@ -85,11 +94,10 @@ class ProductController extends Controller
     }
 
     public function add(ProductRequest $req){
-        if($req->variant !== 'null'){
-            $variant = Variant::where('title', $req->variant)->first()->id;
-        } 
-        else {
+        if($req->variant == 'null'){
             $variant = null;
+        } else{
+            $variant = $req->variant;
         }
         $status = $req->status == 'on'? true : false;
 
@@ -109,7 +117,7 @@ class ProductController extends Controller
         foreach($imagesReq as $image){
             $imgDone = new productImg;
             $imageName = uniqid().Carbon::now()->timestamp. '.' .$image->extension();
-            $imgDone->name = $imageName;
+            $imgDone->path = $imageName;
             $imgDone->product_id = $product->id;
             $image->storeAs('imgs/product', $imageName);
             $imgDone->save();
@@ -167,16 +175,17 @@ class ProductController extends Controller
                 $height = "height_{$i}";
                 $length = "length_{$i}";
                 $weight = "weight_{$i}";
-            $amount = "amount_{$i}";
+                $amount = "amount_{$i}";
 
 
                 $this->addVolume($req->id, $req->$width, $req->$height, $req->$length, $req->$weight, $req->$amount);
             }
         }
+        $price = (float) str_replace(',', '.', str_replace('.', '', $req->price));
         $status = $req->status == 'on'? true : false;
         $product = Product::find($req->id)->update([
             'status'=> $status,
-            'price'=> $req->price,
+            'price'=> $price,
             'text'=> $req->text,
             'amount'=> $req->amount,
             'name'=> $req->name,
@@ -201,4 +210,83 @@ class ProductController extends Controller
 
 
     }
+
+    public function search(Request $req){
+        $filters = new Fluent([
+            'orderby'=> null,
+            'category_id'=> null,
+            'max_value'=> null,
+            'min_value'=> null,
+            'searchText'=> null,
+        ]);
+        $categories = Category::with('children')->get();
+        
+        if($req->method() == 'GET'){
+            $products = Product::with('productImgs')->paginate(20);
+        }
+
+        if($req->method() == 'POST'){
+            
+            switch($req->orderby){
+                case ('popularity'):
+                    $orderby = 'sales';
+                    $order = 'desc';
+                break;
+                case ('lowerPrice'):
+                    $orderby = 'price';
+                    $order = 'asc';
+                break;
+                case ('biggerPrice'):
+                    $orderby = 'price';
+                    $order = 'desc';
+                break;
+                case ('newer'):
+                    $orderby = 'created_at';
+                    $order = 'asc';
+                break;
+                default: 
+                    $orderby = null;
+                    $order = null;
+                break;
+            }
+
+            
+            $min = (int) $req->min_value;
+            $max = (int) $req->max_value;
+            $query = Product::query();
+
+            if($min && $max && $min > $max){
+                return back()->with('price', 'O valor mínimo não pode ser maior que o valor máximo!');
+            }
+
+            if($orderby){
+                $filters->orderby = $req->orderby;
+                $query->orderBy($orderby, $order);
+            }
+            if($req->category_id){
+                $filters->category_id = $req->category_id;
+                $query->where('category_id', $req->category_id);
+            }
+            if($min !== 0){
+                $filters->min_value = $min;
+                $query->where('price', '>=', $min);
+            }
+            if($max !== 0){
+                $filters->max_value = $max;
+                $query->where('price', '<=', $max);
+            }
+            if($req->searchText){
+                $filters->searchText = $req->searchText;
+            }
+
+            $products = $query->with('productImgs')->paginate(20);
+
+            
+        }
+
+        return view('site.search', 
+        ['products'=> $products, 'categories'=> $categories, 'filters'=> $filters]);
+
+    }
+    
 } // class

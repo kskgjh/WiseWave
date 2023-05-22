@@ -1,0 +1,147 @@
+main{
+    width: 100vw;
+    height: calc(100dvh - 3.5rem);
+    display: grid;
+    padding: 2em 4em;
+    grid-template-columns: 1fr 6fr;
+    gap: 0.5em;
+}
+.filters{
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 2em;
+    padding: 0.5em 1em;
+    background-color: var(--red);
+    color: white;
+}
+.filters div:has(button){
+    display: flex;    
+    flex-flow: column nowrap;
+    justify-content: center;
+    gap: 1em;
+    align-items: center;
+}
+.mainContent {
+    padding: 2em 4em;
+    max-width: 100%;
+    display: flex;
+    background-color: var(--dark-red);
+    flex-flow: column nowrap;
+    gap: 1em;
+    align-items: center;
+}
+.mainContent > input{
+    border: none;
+    border-radius: 16px;
+    width: 80%;
+    font-size: 2rem;
+    padding: 0.4em 1em;
+}
+.mainContent > div {
+    padding: 0.5em 0;
+    min-width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-flow: row wrap;
+    gap: 1em;
+    overflow: visible;
+    overflow-y: auto;
+}
+.productCard{
+    text-decoration: none;
+    cursor: pointer;
+    width: calc((100% / 4) - 1em);
+    background-color: var(--red);
+    padding: 0.8em 0.5em;
+    display: flex;
+    color: white;
+    flex-flow: column nowrap;
+    gap: 0.4em;
+    align-items: center;
+}
+.productCard:hover {
+    box-shadow: 0px 0px 8px 0.1px white;
+
+}
+.productCard > div{
+    font-size: 1rem;
+    display: flex;
+    flex-flow: row nowrap;
+    gap: 1em;
+    justify-content: space-around;
+}
+.productCard label {
+    display: flex;
+    flex-flow: row nowrap;
+    gap: 0.3em
+}
+.productCard > h3{
+    font-size: 1.5rem;
+}
+.productCard > span:has(img){
+    width: 100%;
+    border-radius: 16px;
+    overflow: hidden;
+}
+.productCard img{
+    max-width: 100%;
+    border-radius: 16px;
+    aspect-ratio: 1/1;
+    object-fit: scale-down;
+    object-position: center;
+}
+.categories{
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+.categories div:has(.categorySelected) span:not(.categorySelected),
+.categories div:has(.categorySelected) h4:not(.categorySelected) {
+    opacity: 0.7;
+}
+
+.categories h4 {
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+.categories span{
+    cursor: pointer;
+    font-size: 1.3rem;
+}
+.categories h4:hover,
+.categories span:hover{
+    text-decoration: underline;
+}
+.parentCategories{
+    display: flex;
+    flex-flow: column nowrap;
+    padding: 0.4em 1em;
+}
+.childrens{
+    display: flex;
+    flex-flow: column nowrap;
+    padding: 0.4em 1em;
+
+}
+.prices{
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 0.3em;
+}
+.prices > label {
+    padding-left: 0.4em;
+    display: flex;
+    flex-flow: row nowrap;
+}
+.orderby{
+    display: flex;
+    gap: 0.4em;
+    flex-flow: column nowrap;
+}
+.orderby select,
+.orderby option{
+    padding-left: 0.3em; 
+    margin-left: 0.4em;
+    font-size: 1.3rem;
+    width: 90%;
+}

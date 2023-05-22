@@ -17,7 +17,7 @@ class productImgFactory extends Factory
     {
 
         return [
-            'name'=> $this->faker->imageUrl(),
+            'path'=> 'teste.jpg',
         ];
     }
 }

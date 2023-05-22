@@ -12,7 +12,8 @@
         
 
     @error('password')
-        <span>Por favor, insira uma senha</span>
+        <span style="color: white;">Por favor, insira uma senha</span>
+        
     @enderror
     <input
     type="password" 
@@ -21,7 +22,8 @@
     name='password'
     id='password' />
 
-    <button class="btn-1">Enviar</button>
-    <a class="btn-link btn-2" href="{{route('register.render')}}">Cadastrar-se</a>
-
+    <div class="rowDiv">
+        <button class="btn-1">Enviar</button>
+        <a class="btn-link btn-2" href="{{route('register.render')}}">Cadastrar-se</a>
+    </div>
 </form>

@@ -1,4 +1,4 @@
-import { sleep } from "../functions";
+import { moneyFormat, sleep } from "../functions";
 
 export function adminSelector() {
     return {
@@ -7,7 +7,10 @@ export function adminSelector() {
         init() {
             let url = window.location.href;
             let params = new URLSearchParams(new URL(url).search);
+            this.detectUrl(url, params)
             
+        },
+        detectUrl(url, params){
             if (url.match("carrossel")) {
                 this.current = "Carrossel";
                 document.getElementById("carrossel").classList.add("selected");
@@ -23,28 +26,11 @@ export function adminSelector() {
                 document.getElementById("products").classList.add("selected");
                 return;
             }
-        },
-    };
-}
-export function adminSideBar() {
-    return {
-        hidden: false,
-        toggleSideBar() { this.hidden = !this.hidden; },
-        toggleSelected(target) {
-            let listEl = document.querySelector("#sideBarMenu");
-            let arr = document.querySelectorAll(".selected");
-
-            if (target == listEl) return;
-
-            arr.forEach((element) => {
-                if (element.classList.contains("selected"))
-                    element.classList.remove("selected");
-            });
-            target.classList.add("selected");
-            let event = new CustomEvent("change-page", {
-                detail: target.innerText,
-            });
-            dispatchEvent(event);
+            if (url.match("features")) {
+                this.current = "Características";
+                document.getElementById("features").classList.add("selected");
+                return;
+            }
         },
     };
 }
@@ -54,6 +40,7 @@ export function productPage(){
         currentImg: null,
         currentStatus: null,
         variant_id: null,
+        price: null,
         currentVariant: null,
         productId: null,
         variants: null,
@@ -88,7 +75,7 @@ export function productPage(){
             this.$refs.amount.value = product.amount;
             this.$refs.text.value = product.text;
             this.$refs.sales.innerText = product.sales;
-            this.$refs.price.value = product.price
+            this.price = moneyFormat(product.price);
             this.productId = product.id;
 
             if (product.status == true) {
@@ -316,11 +303,8 @@ export function productPage(){
             addVolume.addEventListener("click", (e) => this.addDimensions(e));
         },
         handleSubmit(){
-            let index = this.variants.findIndex((el)=>{
-                return el.title == this.currentVariant?true:false;
-            });
-            let variant_id = this.variants[index].id;
-            this.variant_id = variant_id;
+            let money = moneyFormat(this.price)
+            this.price = money
 
             setTimeout(() => {
                 this.$refs.form.submit()
@@ -731,18 +715,9 @@ export function productForm(){
                 let input = document.querySelector(`#input_${x}`)
                 input.disabled = false                
             }
-            console.log(this.value)
-            let moneyOptions = {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-            };
 
-            let money;
-            if(this.value.match('.')) money = this.value.replaceAll('.', '')
-
-            money = parseFloat(money);
-
-            this.value = money.toLocaleString('pt-br', moneyOptions)
+            let money = moneyFormat(this.value)
+            this.value = money;
 
             await sleep(200);
             this.$refs.form.submit()
@@ -840,5 +815,110 @@ export function categoryForm(){
                     alert(err)
                 });
         }, 
+    }
+}
+export function featureForm(){
+    return {
+        type: null,
+        itemCount: 0,
+        init(){
+            this.$watch('type', (value)=>{
+                if(this.itemCount == 0 && value == 'items') return this.addItem(true)
+            })
+        },
+        plusIcon(){
+            let icon = document.createElement('i')
+            icon.classList.add('fa-solid')
+            icon.classList.add('fa-add')
+            icon.id = `addItemIcon`
+            return icon;
+        },
+        trashCan(){
+            let icon = document.createElement('i')
+            icon.classList.add('fa-solid')
+            icon.classList.add('fa-trash')
+            return icon;
+        },
+        addItem(first){
+
+            console.log('adding item')
+            let div = this.$refs.items;
+            let item = document.createElement('label')
+            let input = document.createElement('input')
+            let plusIcon = this.plusIcon()
+
+            
+            if(!first) {
+                let icon = document.querySelector('#addItemIcon')
+                icon.id = null
+                icon.classList.remove('fa-add')
+                icon.classList.add('fa-trash')
+                icon.onclick = (e)=>{ this.removeItem(e.currentTarget.parentElement) }
+
+            };
+
+            input.id = `item_${this.itemCount}`;
+            input.name = `item_${this.itemCount}`;
+
+            item.innerText = '-'
+            item.classList.add('item')
+            item.appendChild(input)
+            item.appendChild(plusIcon)
+
+            this.itemCount++;
+            div.appendChild(item)
+
+            plusIcon.onclick = (e)=>{ this.addItem() }
+            
+        },
+        removeItem(el){
+            this.itemCount--;
+            el.remove();
+            let items = document.querySelectorAll('.item')
+            let arr = Array.from(items)
+            arr.forEach((el, index)=>{
+                let input = el.querySelector('input')
+                input.id = `item_${index}`
+                input.name = `item_${index}`
+
+            });
+        },
+        handleSubmit(){
+            let form = this.$refs.form;
+
+            if(this.type == 'text') form.action = "/feature"; 
+            if(this.type == 'items') form.action = `/feature/${this.itemCount}`;
+
+            form.submit()
+        }
+
+    };
+}
+export function productFeature(){
+    return {
+        features: null,
+        product: 'null',
+        feature: 'null',
+        init(){
+            this.getFeatures()
+        },
+        async getFeatures(){
+            await axios.get('/feature')
+                .then((result) => {
+                    this.features = result.data;
+                }).catch((err) => {
+                    alert(err)
+                });
+        },
+        reset(){
+            this.product = 'null'
+            this.feature = 'null'
+        },
+        handleSubmit(){
+            if(this.feature == 'null' || this.product == 'null') return;
+
+
+            this.$refs.form.submit();
+        }
     }
 }

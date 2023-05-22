@@ -12,7 +12,8 @@
     box-sizing: border-box;
 }
 *:focus {
-    outline: 5px solid var(--secondary-color);
+    outline: 2px solid var(--secondary-color);
+    outline-offset: 2px;
 }
 body{
     overflow-x: hidden;
@@ -46,6 +47,9 @@ body{
 body {
     background-color: var(--bg-color);
 }
+.inline {
+    margin-inline: auto
+}
 .border {
     border: 2px solid;
 }
@@ -59,14 +63,16 @@ body {
     position: absolute;
 }
 #header {
-    display: grid;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
     position: sticky;
     left: 0;
     color: white;
     top: 0;
     right: 0;
     z-index: 3;
-    grid-template-columns: auto 1fr;
     background-color: var(--red);
     height: 3.5rem;
     align-items: center;
@@ -76,13 +82,20 @@ body {
     box-shadow: 0px 4px var(--light-red), 0px 6px 5px var(--light-red);
 }
 #header .right {
-    min-width: 100%;
+    min-width: fit-content;
     display: flex;
-    justify-content: flex-end;
-    gap: 0.5em;
+    flex-flow: row nowrap;
+    align-items: center;
+    gap: 0.3em;
 }
 #header .right a:hover {
     text-decoration: underline;
+}
+#header .right div,
+#header .right span {
+    min-height: 100%;
+    display: grid;
+    place-items: center;
 }
 #header .left {
     display: flex;
@@ -90,32 +103,45 @@ body {
 }
 #header a {
     color: white;
-
+    padding: 0.3em 0.6em;
     text-decoration: none;
     position: relative;
+    display: grid;
+    place-items: center;
     z-index: 1;
+}
+#header .icon{
+    width: 40px;
+    height: 40px;
+}
+.search{
+    min-height: 100%;
+    margin-left: auto;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    gap: 0.8em;
+}
+.search input {
+    font-size: 1.5rem;
+    color: black;
+    padding: 0.3em 1em;
+    height: 1.8rem;
+    border: none;
+    background-color: white;
+    border-radius: 16px;
+    transform-origin: right;
+    transition: transform 400ms ease-out;
+}
+.hideSearchBar {
+    transform: scaleX(0);
 }
 .zindex10 {
     z-index: 10;
 }
-.pagination {
-    display: flex;
-    gap: 0.5em;
-    user-select: none;
-    background-color: var(--light-red);
-    border: 2px solid black;
-    color: white;
-    list-style: none;
-    width: fit-content;
-    margin-inline: auto;
-    font-size: 2rem;
-}
+
 .current-page span {
     color: gray !important;
-}
-.pagination a {
-    padding: 0.3em 0.3em;
-    text-decoration: none;
 }
 .disabled {
     display: none !important;
@@ -360,12 +386,125 @@ body {
     flex-flow: column nowrap;
     gap: 0.5em;
 }
+.dimTable{
+    border: 1px solid white;
 
-@keyframes spinning {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
+}
+.dimTable tbody,
+.dimTable thead {
+    border: 2px solid white;
+}
+.dimTable tbody th,
+.dimTable thead th {
+    font-size: 1.5rem;
+    padding: 0.4em 0.7em;
+}
+.loginPage{
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    gap: 2em;
+    padding-top: 10rem;
+    height: calc(100dvh - 3.5rem);
+}
+.loginMessage{
+    background-color: var(--red);
+    border: 2px solid white;
+    color: white;
+    border-radius: 16px;
+    font-size: 1.5rem;
+    padding: 0.5em 1em;
+}
+.loginMessage a:link,
+.loginMessage a {
+    color: var(--secondary-color);
+}
+.accessDenied {
+    background-color: var(--bg-color);
+    display: grid;
+    place-items: center;
+    height: 100dvh;
+}
+.accessDenied a,
+.accessDenied a:link {
+    font-weight: 16px;
+    color: var(--secondary-color);
+}
+.accessDenied section {
+    background-color: var(--red);
+    padding: 1em 2em;
+    border-radius: 16px;
+    color: white;
+    border: 2px solid;
+}
+.accessDenied p {
+    font-size: 2rem;
+}
+.accessDenied h2 {
+    font-size: 2.5rem;
+}
+#menuBtn {
+    cursor: pointer;
+
+}
+#sideBarMenu {
+    padding: 1em 2em;
+    background-color: var(--dark-red);
+    right: 0;
+    z-index: 1;
+    top: 3.5rem;
+    min-height: calc(100dvh - 3.5rem);
+    place-self: end;
+    display: flex;
+    gap: 1.5em;
+    position: fixed;
+    flex-flow: column nowrap;
+    align-items: center;
+    transition: transform 500ms ease-out;
+}
+.sideBarHide{
+    transform: translateX(100%);
+}
+#sideBarMenu h1 {
+    font-size: 4rem;
+}
+#sideBarMenu  {
+    list-style: none;
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 1em;
+}
+#sideBarMenu a:hover {
+    text-decoration: none !important;
+}
+.selected {
+    background-color: var(--light-red);
+}
+#sideBarMenu:first-child {
+    margin-bottom: 2rem;
+}
+#sideBarMenu a {
+    display: block;
+    user-select: none;
+    padding: 0.3em 0.5em;
+    font-size: 2rem;
+    cursor: pointer;
+    transition-delay:   box-shadow 300ms, 
+                        background 100ms;
+    transition: background 200ms ease, 
+                box-shadow 300ms ease-out,
+                transform 200ms ease-out,
+                opacity 300ms ease;
+}
+#sideBarMenu li:not(.selected):hover {
+    background-color: var(--light-red);
+    box-shadow: 5px 6px gray;
+    transform: translate(-5px, -6px);
+}
+#sideBarMenu li:active {
+    box-shadow: none;
+    transform: translate(0px, 0px);
+}
+#sideBarMenu:has(li:not(.selected):hover) li:not(:hover) {
+    opacity: 0.5;
 }

@@ -30,10 +30,13 @@ class Controller extends BaseController
         return redirect(route('index'));
     }
 
-    public function login(string $email = null){
+    public function login(){
 
-        return view('site.login', ['email' => $email]);
+        return view('site.loginPage');
     }
 
+    public function accessDenied(){
+        return view('site.deniedAccess');
+    }
     
 }

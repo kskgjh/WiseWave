@@ -36,13 +36,12 @@
                     </div>
                 </label>
 
-                <input type="hidden" name="variant_id" x-model="variant_id">
                 <label x-ref="variant_label">Variante:
-                    <select x-model="currentVariant">
+                    <select name="variant_id">
                         <option value="null" disabled>Selecionar uma variante</option>
                         <template x-if="variants">
                             <template x-for="variant in variants">
-                                <option x-value="variant.id" x-text="variant.title"></option>
+                                <option :value="variant.id" x-text="variant.title"></option>
                             </template>
                         </template>
                     </select>
@@ -65,7 +64,7 @@
 
                 <label>
                     Preço:
-                    <input type="text" x-ref="price" name="price" placeholder="Preço">
+                    <input type="text" x-model="price" x-ref="price" name="price" placeholder="Preço">
                 </label>
             </div>
         </div>
@@ -77,7 +76,7 @@
             @endif
             
             <div x-ref="dimTable"></div>
-                <button class="btn-1" type="button" @click="addDimensions($event)">
+                <button class="btn-1 inline" type="button" @click="addDimensions($event)">
                     Incluir dimensões
                     <i class="fa-solid fa-plus"></i>
                 </button>

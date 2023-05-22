@@ -1,0 +1,84 @@
+main{
+    display: flex;
+    flex-flow: column nowrap;
+    padding: 2em 4em;
+    align-items: center;
+}
+.cart {
+    padding: 1em 2em;
+    background-color: var(--red);
+    width: 80vw;
+    border-radius: 16px;
+    border: 1px solid white;
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+}
+.final {
+    background-color: var(--light-red);
+    padding: 1em 2em;
+    color: white;
+    display: flex;
+    flex-flow: column nowrap;
+    width: 100%;
+}
+.final button {
+    align-self: center;
+}
+.items {
+    color: white;
+    width: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 1em;
+    padding: 1em 2em;
+}
+
+.items > div{
+    width: 100%;
+    background-color: var(--light-red);
+    padding: 0.5em 1em;
+    display: flex;
+    flex-flow: row nowrap;
+    gap: 1em;
+}
+.items img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    object-position: center;
+}
+.itemInfos{
+    display: flex;
+    flex-flow: row nowrap;
+    gap: 0.5em;
+    width: 100%;
+    justify-content: space-between;
+}
+.itemInfos .left {
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 0.5em;
+}
+.itemInfos .right {
+    font-size: 1.5rem;
+    display: flex;
+    flex-flow: row nowrap;
+    gap: 1em;
+    align-items: center;
+    height: 100%;
+}
+.itemInfos i {
+    font-size: 2rem;
+    cursor: pointer;
+}
+.name{
+    font-size: 2.5rem;
+}
+.name a:link,
+.name a {
+    color: white;
+    text-decoration: none;
+}
+.name a:hover{
+    text-decoration: underline;
+}

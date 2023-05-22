@@ -6,6 +6,7 @@ use App\Http\Requests\RegisterUserRequest;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Address;
+use App\Models\Cart;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -20,9 +21,10 @@ class userController extends Controller
         return User::all();
     }
 
-    public function selectById (Request $get) {
-        $dados = User::find($get->id);
-        return $dados;
+    public function find (Request $req) {
+        $user = User::with('address')->with('cart')->find($req->id);
+        //dd($user);
+        return $user;
     }
     
     public function search(Request $get){
@@ -88,6 +90,7 @@ class userController extends Controller
     } 
 
     public function authenticate(Request $req){
+        
         $credentials = $req->validate([
             'email'=> ['required', 'email'], 
             'password'=> 'required'

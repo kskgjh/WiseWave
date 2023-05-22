@@ -29,4 +29,9 @@ class Product extends Model
     public function volumes(){
         return $this->hasMany(Volume::class);
     }
+
+    public function features(){
+        return $this->hasMany(ProductFeature::class);
+    }
+
 }

@@ -1,18 +1,30 @@
-<script>
+<div id="doubleRangeInput" x-data="doubleRangeInput">
+
+    <div x-ref="line" class="line" 
+        @mousedown="handleDownClick($event.target)" 
+        @mouseup="handleUpClick($event.target)"
+        @mousemove="getMouseCoords($event)">
+        <span class="maxValue"></span>
+        <span class="minValue"></span>
+    </div>
+
+    <label for="min">Mínimo
+        <span x-text="minValue"></span>
+    </label>
+    <label for="max">Máximo
+        <span x-text="maxValue"></span>
+    </label>
+
+    <input type="hidden"  x-model='minValue'>
+    <input type="hidden" x-model='maxValue'>
+
+    {{-- <script>
         let line = document.querySelector('.line')
-        var animation, xLine, min, max, target, mouseX, moveElement;
+        var animation, xLine, min, max, target, startMouseX, mouseX, moveElement;
 
         function movePointer(){
             console.log('animando')
-            console.log(`mouse x: ${mouseX}, parent: `)
-            console.log(target.offsetParent)
-            if(target.classList.contains('minValue')){
-                let current = target.style.right.replace('px', '')
 
-                target.style.right = (current + mouseX) + 'px'
-            }
-
-            animation = requestAnimationFrame(movePointer)
         }
         (function getCoords(){
             let lineCoords = line.getBoundingClientRect()
@@ -35,14 +47,15 @@
             if(e.target === line) return;
             target = e.target;
             moveElement = true;
-            animation = requestAnimationFrame(movePointer); 
+            movePointer();
         })
         line.addEventListener('mouseleave', e=> { 
-            window.cancelAnimationFrame(animation) 
+            moveElement = false;
         })
         line.addEventListener('mouseup', e=> { 
-            window.cancelAnimationFrame(animation) 
+            moveElement = false;
         })
 
 
-    </script>
+    </script> --}}
+</div>
